@@ -16,7 +16,6 @@ import History from './pages/History.jsx'
 import SavedPlan from './pages/SavedPlan.jsx'
 import Library from './pages/Library.jsx'
 import Topic from './pages/Topic.jsx'
-import MapPage from './pages/MapPage.jsx'
 import Deadlines from './pages/Deadlines.jsx'
 import Directory from './pages/Directory.jsx'
 import Login from './pages/Login.jsx'
@@ -31,7 +30,6 @@ const NAV_ITEMS = (tr) => [
   ['/check', 'search', tr('Check')],
   ['/compare', 'compare', tr('Compare')],
   ['/library', 'book', tr('Rights')],
-  ['/map', 'map', tr('Map')],
   ['/deadlines', 'clock', tr('Deadlines')],
   ['/help', 'help', tr('Help')],
   ['/history', 'file', tr('History')]
@@ -325,7 +323,6 @@ export default function App() {
               <Route path="/plan/:id" element={<Protected><SavedPlan /></Protected>} />
               <Route path="/library" element={<Protected><Library /></Protected>} />
               <Route path="/library/:id" element={<Protected><Topic /></Protected>} />
-              <Route path="/map" element={<Protected><MapPage /></Protected>} />
               <Route path="/deadlines" element={<Protected><Deadlines /></Protected>} />
               <Route path="/help" element={<Protected><Directory /></Protected>} />
             </Routes>

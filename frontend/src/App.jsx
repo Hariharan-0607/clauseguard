@@ -128,16 +128,24 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
 }
 
 function SidebarLink({ to, icon, label, collapsed, onSelect }) {
+  const [hovered, setHovered] = useState(false)
   return (
     <NavLink to={to} end={to === '/'} title={collapsed ? label : ''} onClick={onSelect}
-      className="group relative flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm font-medium transition"
-      style={({ isActive }) => isActive
-        ? { background: 'var(--highlight)', color: 'var(--text)' }
-        : { color: 'var(--text-3)' }}>
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group relative flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm font-medium transition-all duration-150"
+      style={({ isActive }) => ({
+        background: isActive ? 'var(--highlight)' : hovered ? 'var(--highlight)' : 'transparent',
+        color: isActive ? 'var(--text)' : hovered ? 'var(--text)' : 'var(--text-3)',
+        transform: hovered && !isActive ? 'translateX(3px)' : 'none',
+      })}>
       {({ isActive }) => (
         <>
           {isActive && <span className="absolute -left-3 h-5 w-1 rounded-r-full" style={{ background: 'var(--primary)' }} />}
-          <span className="grid h-6 w-6 shrink-0 place-items-center"><Icon name={icon} size={20} /></span>
+          <span className="grid h-6 w-6 shrink-0 place-items-center transition-transform duration-150"
+            style={{ transform: hovered ? 'scale(1.15)' : 'scale(1)' }}>
+            <Icon name={icon} size={20} />
+          </span>
           <span className="sb-label truncate">{label}</span>
           {collapsed && <Tooltip label={label} />}
         </>
@@ -147,11 +155,19 @@ function SidebarLink({ to, icon, label, collapsed, onSelect }) {
 }
 
 function SidebarButton({ icon, glyph, label, collapsed, onClick, active }) {
+  const [hovered, setHovered] = useState(false)
   return (
     <button onClick={onClick} title={collapsed ? label : ''}
-      className="group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm font-medium transition hover:bg-[var(--highlight)]"
-      style={active ? { background: 'var(--highlight)', color: 'var(--text)' } : { color: 'var(--text-3)' }}>
-      <span className="grid h-6 w-6 shrink-0 place-items-center text-xs font-bold">
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm font-medium transition-all duration-150"
+      style={{
+        background: active || hovered ? 'var(--highlight)' : 'transparent',
+        color: active || hovered ? 'var(--text)' : 'var(--text-3)',
+        transform: hovered && !active ? 'translateX(3px)' : 'none',
+      }}>
+      <span className="grid h-6 w-6 shrink-0 place-items-center text-xs font-bold transition-transform duration-150"
+        style={{ transform: hovered ? 'scale(1.15)' : 'scale(1)' }}>
         {icon ? <Icon name={icon} size={19} /> : glyph}
       </span>
       <span className="sb-label truncate">{label}</span>
@@ -284,7 +300,7 @@ export default function App() {
     <div className={`flex min-h-full ${collapsed ? 'sb-collapsed' : ''} ${showExpanded ? '' : 'sb-rail'}`} style={{ background: 'var(--bg)' }}>
       {/* Desktop floating sidebar — collapses on select, expands on hover */}
       <aside className="sb-aside fixed inset-y-0 left-0 z-30 hidden p-3 lg:block"
-        onMouseEnter={() => collapsed && setHovering(true)}
+        onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}>
         <FloatingSidebar collapsed={!showExpanded} onToggle={toggleCollapsed} onSelect={collapseOnSelect} />
       </aside>

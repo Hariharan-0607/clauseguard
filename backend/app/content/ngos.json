@@ -1,0 +1,52 @@
+{
+  "orgs": [
+    {
+      "name": "National Legal Services Authority (NALSA)",
+      "country": "IN",
+      "category": "Legal aid",
+      "help": "Free legal aid for those who cannot afford a lawyer.",
+      "url": "https://nalsa.gov.in",
+      "phone": "15100"
+    },
+    {
+      "name": "Tenant helpline (State Rent Authority)",
+      "country": "IN",
+      "category": "Housing",
+      "help": "Guidance on deposits, eviction and rent disputes.",
+      "url": "",
+      "phone": ""
+    },
+    {
+      "name": "Labour Commissioner / Shram Suvidha",
+      "country": "IN",
+      "category": "Wages & work",
+      "help": "File complaints about unpaid wages and unfair work terms.",
+      "url": "https://shramsuvidha.gov.in",
+      "phone": ""
+    },
+    {
+      "name": "Legal Aid at Work",
+      "country": "US-CA",
+      "category": "Wages & work",
+      "help": "Free help for low-wage workers on pay, leave and rights.",
+      "url": "https://legalaidatwork.org",
+      "phone": "415-864-8848"
+    },
+    {
+      "name": "California Courts Self-Help",
+      "country": "US-CA",
+      "category": "Housing",
+      "help": "Self-help on eviction, small claims and tenant rights.",
+      "url": "https://selfhelp.courts.ca.gov",
+      "phone": ""
+    },
+    {
+      "name": "Bay Area Legal Aid",
+      "country": "US-CA",
+      "category": "Legal aid",
+      "help": "Free civil legal services including housing and benefits.",
+      "url": "https://baylegal.org",
+      "phone": "800-551-5554"
+    }
+  ]
+}

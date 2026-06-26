@@ -1,0 +1,56 @@
+{
+  "jurisdiction": "US-CA",
+  "name": "USA — California tenancy & employment (illustrative subset)",
+  "disclaimer": "Illustrative rules for a demo. Not legal advice. Verify against current law and consult legal aid.",
+  "rules": [
+    {
+      "id": "nonrefundable_deposit",
+      "keywords": ["non-refundable deposit", "nonrefundable deposit", "deposit is non-refundable", "forfeit the deposit"],
+      "category": "deposit",
+      "severity": "illegal",
+      "citation": "California Civil Code §1950.5 — security deposits are refundable; non-refundable deposits are not allowed",
+      "plain_reason": "In California, residential security deposits must be refundable; a landlord cannot label them non-refundable."
+    },
+    {
+      "id": "excessive_deposit_ca",
+      "keywords": ["three months rent as deposit", "deposit of three months", "deposit equal to 3 months"],
+      "category": "deposit",
+      "severity": "unfair",
+      "citation": "California Civil Code §1950.5 — deposit cap (commonly up to ~1-2 months' rent)",
+      "plain_reason": "California caps security deposits; demanding several months' rent as a deposit is excessive."
+    },
+    {
+      "id": "illegal_lockout",
+      "keywords": ["change the locks", "lock out the tenant", "shut off utilities", "vacate within 24 hours", "evict without notice"],
+      "patterns": ["evict.{0,20}without notice", "vacate.{0,15}(24|48)\\s*hours?"],
+      "category": "eviction",
+      "severity": "illegal",
+      "citation": "California Civil Code §789.3 — self-help eviction (lockouts, utility shutoff) is illegal",
+      "plain_reason": "A landlord cannot lock you out, shut off utilities, or evict without a proper court process and notice."
+    },
+    {
+      "id": "waive_overtime",
+      "keywords": ["waive overtime", "no overtime pay", "not entitled to overtime", "salary covers all hours"],
+      "category": "wages",
+      "severity": "illegal",
+      "citation": "California Labor Code §510 / §1194 — non-exempt employees cannot waive overtime",
+      "plain_reason": "Eligible workers are owed overtime; a clause that makes you 'waive' it is not enforceable."
+    },
+    {
+      "id": "noncompete",
+      "keywords": ["non-compete", "noncompete", "shall not work for a competitor", "covenant not to compete"],
+      "category": "employment",
+      "severity": "illegal",
+      "citation": "California Business & Professions Code §16600 — non-compete clauses are generally void",
+      "plain_reason": "In California, clauses stopping you from working for a competitor are generally unenforceable."
+    },
+    {
+      "id": "unilateral_change_ca",
+      "keywords": ["may change these terms at any time", "modify the terms without notice", "amend at sole discretion"],
+      "category": "fairness",
+      "severity": "unfair",
+      "citation": "Cal. consumer law — one-sided unilateral modification terms may be unconscionable",
+      "plain_reason": "A term letting one side change the rules anytime without notice is one-sided and may be unenforceable."
+    }
+  ]
+}

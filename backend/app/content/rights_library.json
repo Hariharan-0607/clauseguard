@@ -1,0 +1,82 @@
+{
+  "topics": [
+    {
+      "id": "deposits",
+      "icon": "🏦",
+      "title": "Security Deposits",
+      "summary": "What a landlord can and cannot do with your deposit.",
+      "body": "Your security deposit is your money, held in trust. A landlord can deduct only for genuine, itemised damage beyond normal wear and tear or unpaid rent — never 'for any reason'. In many regions the deposit is capped (commonly ~2 months' rent for homes) and must be refunded within a set period after you leave.\n\nRed flags: 'non-refundable deposit', 'forfeit the full deposit', deposits of many months' rent, or no mention of when it's returned.\n\nWhat to do: ask for an itemised list of any deductions, photograph the property when moving in and out, and keep all receipts.",
+      "rights": [
+        "A deposit must be refundable.",
+        "Deductions must be itemised and genuine.",
+        "Deposits are often capped by law.",
+        "Refund is due within a defined time after move-out."
+      ]
+    },
+    {
+      "id": "eviction",
+      "icon": "🚪",
+      "title": "Eviction & Notice",
+      "summary": "You cannot be thrown out without proper notice and process.",
+      "body": "A landlord generally cannot evict you without written notice and, in most cases, a legal process. 'Self-help' eviction — changing the locks, removing your belongings, or shutting off utilities to force you out — is illegal in many places.\n\nRed flags: 'vacate within 24/48 hours', 'evict without notice', 'landlord may change the locks'.\n\nWhat to do: get any notice in writing, note the date, and do not leave under verbal threats alone. Contact local legal aid immediately if you're being pushed out unlawfully.",
+      "rights": [
+        "Eviction needs proper written notice.",
+        "Lockouts and utility shut-offs are usually illegal.",
+        "You often have the right to a hearing.",
+        "Keep every notice in writing with dates."
+      ]
+    },
+    {
+      "id": "wages",
+      "icon": "💸",
+      "title": "Wages & Pay",
+      "summary": "Earned wages must be paid — they cannot be 'forfeited'.",
+      "body": "Wages you have already earned are legally owed to you and must be paid by the due date. An employer generally cannot withhold or 'forfeit' your earned pay because you resigned, gave short notice, or made a mistake.\n\nRed flags: 'salary will be forfeited', 'wages withheld until…', 'no pay if you leave without X months notice'.\n\nWhat to do: keep records of hours worked and payments due. A written demand for unpaid wages is often the first step; labour authorities can help enforce it.",
+      "rights": [
+        "Earned wages must be paid on time.",
+        "Pay cannot be forfeited for resigning.",
+        "You're entitled to a pay record/slip.",
+        "Unlawful deductions can be reclaimed."
+      ]
+    },
+    {
+      "id": "overtime",
+      "icon": "⏰",
+      "title": "Overtime & Hours",
+      "summary": "Eligible workers are owed overtime — it can't be 'waived'.",
+      "body": "In many jurisdictions, eligible (non-exempt) workers must be paid extra for overtime hours. A clause saying your salary 'covers all hours' or that you 'waive overtime' is often unenforceable.\n\nRed flags: 'not entitled to overtime', 'salary covers all hours regardless', 'waive overtime pay'.\n\nWhat to do: track your actual hours. If you regularly work beyond the standard week without extra pay, you may be owed back-pay.",
+      "rights": [
+        "Overtime pay may be legally required.",
+        "Overtime rights often can't be waived.",
+        "Track your real working hours.",
+        "Back-pay may be recoverable."
+      ]
+    },
+    {
+      "id": "noncompete",
+      "icon": "🔗",
+      "title": "Non-Compete Clauses",
+      "summary": "Clauses stopping you from working elsewhere are often void.",
+      "body": "A non-compete tries to stop you from working for a competitor after you leave. In several jurisdictions (e.g. California) these are largely void; elsewhere they're only enforceable if narrow and reasonable.\n\nRed flags: broad bans ('any competitor, anywhere, for years'), huge penalties for joining a rival.\n\nWhat to do: don't assume it's enforceable. Check your local rules and seek advice before turning down work because of one.",
+      "rights": [
+        "Many non-competes are unenforceable.",
+        "They must be narrow and reasonable to hold.",
+        "Some regions void them entirely.",
+        "Penalties must be reasonable, not punitive."
+      ]
+    },
+    {
+      "id": "unfair-terms",
+      "icon": "⚖️",
+      "title": "Unfair One-Sided Terms",
+      "summary": "Terms that let one side change the rules anytime are suspect.",
+      "body": "Consumer and contract law in many places lets courts strike down 'unfair' or 'unconscionable' terms — especially one-sided ones, like a clause letting the other party change the agreement at any time without telling you.\n\nRed flags: 'we may change these terms at any time without notice', 'sole discretion', rights waivers buried in fine print.\n\nWhat to do: flag these before signing and ask for balanced wording (reasonable notice, mutual rights).",
+      "rights": [
+        "Grossly one-sided terms may be unenforceable.",
+        "Unilateral change clauses are suspect.",
+        "Hidden rights-waivers can be challenged.",
+        "Ask for balanced, mutual wording."
+      ]
+    }
+  ]
+}

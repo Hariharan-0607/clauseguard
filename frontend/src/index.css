@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Slate Mono (minimal) theme ──────────────────────────────── */
+:root {
+  --primary: #0F172A;
+  --secondary: #1E293B;
+  --accent: #475569;
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --text: #0F172A;
+  --text-2: #1E293B;
+  --text-3: #64748B;
+  --text-inv: #FFFFFF;
+  --border: #E2E8F0;
+  --highlight: #F1F5F9;
+  --input-bg: #F8FAFC;
+  /* back-compat aliases (old page styles) → Slate Mono */
+  --navy: var(--text);
+  --brand: var(--primary);
+  --brand-600: var(--secondary);
+  --brand-50: var(--highlight);
+  --teal: var(--accent);
+  --ink: var(--text);
+  --mute: var(--text-3);
+  --line: var(--border);
+}
+.dark {
+  --primary: #E2E8F0;
+  --secondary: #CBD5E1;
+  --accent: #94A3B8;
+  --bg: #020617;
+  --surface: #0F172A;
+  --card: #111827;
+  --text: #F8FAFC;
+  --text-2: #CBD5E1;
+  --text-3: #94A3B8;
+  --text-inv: #020617;
+  --border: #1E293B;
+  --highlight: #1F2937;
+  --input-bg: #0F172A;
+  --navy: var(--text);
+  --brand: var(--primary);
+  --brand-600: var(--secondary);
+  --brand-50: var(--highlight);
+  --teal: var(--accent);
+  --ink: var(--text);
+  --mute: var(--text-3);
+  --line: var(--border);
+}
+
+* { -webkit-font-smoothing: antialiased; }
+html, body, #root { height: 100%; }
+body {
+  color: var(--text);
+  background: var(--bg);
+  letter-spacing: -0.011em;
+  transition: background-color .2s, color .2s;
+}
+
+@layer components {
+  .container-app { @apply mx-auto w-full max-w-4xl px-5; }
+
+  .card {
+    @apply rounded-xl border;
+    background: var(--card);
+    border-color: var(--border);
+  }
+  .card-hover { @apply transition duration-200; }
+  .card-hover:hover { border-color: var(--accent); }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition;
+  }
+  .btn-primary { @apply btn; background: var(--primary); color: var(--text-inv); }
+  .btn-primary:hover { opacity: .9; }
+  .btn-ghost { @apply btn border; background: var(--surface); color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium; }
+
+  .field {
+    @apply w-full rounded-lg border px-3.5 py-2.5 text-sm outline-none transition;
+    background: var(--input-bg);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+
+  .label { @apply mb-2 block text-xs font-semibold uppercase tracking-wider; color: var(--text-3); }
+
+  .icon-tile { @apply grid place-items-center rounded-lg; background: var(--highlight); color: var(--text-2); }
+
+  .skeleton { @apply relative overflow-hidden rounded-lg; background: var(--highlight); }
+  .skeleton::after {
+    content: ''; @apply absolute inset-0;
+    animation: shimmer 1.6s infinite;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface) 60%, transparent), transparent);
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.animate-fade-up { animation: fade-up .35s ease both; }
+
+/* leaflet popups follow the theme */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--card); color: var(--text); }
+
+/* --- Floating collapsible sidebar (desktop, lg+) --- */
+/* The ASIDE width follows the visual state (.sb-rail = collapsed AND not hovered),
+   so a hover temporarily widens it. The MAIN margin follows the persisted intent
+   (.sb-collapsed) only, so the expanded-on-hover rail floats OVER the content
+   instead of pushing it around on every hover. */
+@media (min-width: 1024px) {
+  .sb-aside { width: 272px; transition: width .26s cubic-bezier(.4, 0, .2, 1); }
+  .sb-main  { margin-left: 272px; transition: margin-left .26s cubic-bezier(.4, 0, .2, 1); }
+
+  .sb-rail .sb-aside     { width: 92px; }   /* visually collapsed (no hover) */
+  .sb-collapsed .sb-main { margin-left: 92px; }  /* content reclaims space when intent is collapsed */
+
+  /* labels fade + slide away in the collapsed visual state; reappear on hover */
+  .sb-label {
+    overflow: hidden; white-space: nowrap;
+    transition: opacity .18s ease, max-width .26s cubic-bezier(.4, 0, .2, 1), margin .26s ease;
+    max-width: 200px; opacity: 1;
+  }
+  .sb-rail .sb-label { max-width: 0; opacity: 0; margin: 0 !important; }
+
+  .sb-rail .sb-toggle { margin-left: auto; }
+}
+
+/* tooltips only matter when collapsed (labels are visible otherwise) */
+
+/* --- Print / "Export PDF" --- */
+.print-only { display: none; }
+
+@media print {
+  /* hide app chrome: sidebar, mobile bar, floating assistant, and anything opted out */
+  aside, .no-print, .leaflet-container { display: none !important; }
+  /* drop the left offset the main column reserves for the sidebar */
+  .sb-main { margin-left: 0 !important; }
+
+  :root, .dark {
+    --bg: #ffffff; --surface: #ffffff; --card: #ffffff; --highlight: #f3f4f6;
+    --text: #0f172a; --text-2: #1e293b; --text-3: #475569; --border: #e2e8f0;
+  }
+  body { background: #ffffff; }
+  main { padding: 0 !important; }
+
+  .print-only { display: block; }
+  .print-header { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid #0f172a; }
+  .print-brand { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #0f172a; }
+  .print-title { margin-top: 2px; font-size: 14px; font-weight: 600; color: #1e293b; }
+  .print-meta { margin-top: 6px; font-size: 11px; color: #475569; }
+
+  /* avoid breaking cards across pages where possible */
+  .card, section, .rounded-2xl { break-inside: avoid; }
+  a { text-decoration: none !important; color: inherit !important; }
+}

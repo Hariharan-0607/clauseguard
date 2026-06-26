@@ -1,0 +1,66 @@
+{
+  "jurisdiction": "IN",
+  "name": "India — tenancy & labour (illustrative subset)",
+  "disclaimer": "Illustrative rules for a demo. Not legal advice. Verify against current law and consult legal aid.",
+  "rules": [
+    {
+      "id": "deposit_forfeit",
+      "keywords": ["forfeit the deposit", "forfeit deposit", "non-refundable deposit", "deposit shall not be refunded", "retain the full deposit"],
+      "patterns": ["forfeit.{0,25}deposit", "(keep|retain|withhold|not\\s+refund).{0,25}deposit", "deposit.{0,20}(forfeit|non-?refundable|not\\s+refund)"],
+      "category": "deposit",
+      "severity": "illegal",
+      "citation": "Model Tenancy Act, 2021 — security deposit must be returned minus lawful deductions",
+      "plain_reason": "A landlord cannot keep your full security deposit for any reason; it must be refunded minus genuine, itemised damages."
+    },
+    {
+      "id": "excessive_deposit",
+      "keywords": ["six months rent as deposit", "12 months deposit", "deposit of twelve months", "deposit equal to one year"],
+      "category": "deposit",
+      "severity": "unfair",
+      "citation": "Model Tenancy Act, 2021 — deposit typically capped at 2 months (residential)",
+      "plain_reason": "Security deposit for a home is normally capped at about two months' rent; anything far above that is excessive."
+    },
+    {
+      "id": "short_eviction_notice",
+      "keywords": ["24 hours notice", "vacate within 24 hours", "evict without notice", "immediate eviction", "vacate within 48 hours"],
+      "patterns": ["evict.{0,30}(without notice|no notice|24|48)", "(vacate|leave|quit).{0,20}(24|48)\\s*hours?", "(24|48)\\s*hours?.{0,20}notice"],
+      "category": "eviction",
+      "severity": "illegal",
+      "citation": "Tenancy law — minimum written notice required before eviction",
+      "plain_reason": "A landlord must give proper written notice (commonly 15 days to a month) before asking you to leave — not 24–48 hours."
+    },
+    {
+      "id": "wage_withholding",
+      "keywords": ["withhold wages", "salary will be forfeited", "no salary if you resign", "forfeit pending salary", "salary withheld until"],
+      "category": "wages",
+      "severity": "illegal",
+      "citation": "Payment of Wages Act, 1936 — earned wages must be paid",
+      "plain_reason": "Wages you have already earned cannot be withheld or forfeited; they must be paid by the due date."
+    },
+    {
+      "id": "excessive_penalty",
+      "keywords": ["penalty of three months", "pay 3 months salary", "penalty equal to", "liquidated damages of"],
+      "patterns": ["penalty.{0,25}(months?|times)"],
+      "category": "penalty",
+      "severity": "unfair",
+      "citation": "Indian Contract Act, 1872 §74 — only reasonable compensation is enforceable",
+      "plain_reason": "A penalty must be a genuine, reasonable estimate of loss; large punitive penalties are usually not enforceable."
+    },
+    {
+      "id": "unilateral_change",
+      "keywords": ["may change these terms at any time", "modify the terms without notice", "amend at sole discretion"],
+      "category": "fairness",
+      "severity": "unfair",
+      "citation": "Consumer Protection Act, 2019 — unilateral one-sided terms may be 'unfair contracts'",
+      "plain_reason": "One side being able to change the rules anytime, without telling you, is a one-sided unfair term."
+    },
+    {
+      "id": "rent_due_term",
+      "keywords": ["rent is payable", "rent shall be paid", "payable in advance on or before"],
+      "category": "rent",
+      "severity": "fair",
+      "citation": "",
+      "plain_reason": "A clear, standard rent-payment schedule is normal and fair."
+    }
+  ]
+}

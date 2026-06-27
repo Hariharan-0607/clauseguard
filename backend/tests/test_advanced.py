@@ -82,6 +82,22 @@ def test_admin_cannot_self_demote():
     assert r.status_code == 400
 
 
+def test_translate_uses_offline_dictionary():
+    """UI strings must translate via the built-in dictionary even in AI_MOCK mode."""
+    r = client.post("/translate", json={
+        "texts": ["Dashboard", "Users", "Human Rights"], "language": "Tamil"}).json()
+    out = r["translations"]
+    assert len(out) == 3
+    # none should remain the English original (dictionary must have replaced them)
+    assert out[0] != "Dashboard" and out[1] != "Users"
+    assert "டாஷ்போர்டு" == out[0]
+
+
+def test_translate_english_passthrough():
+    r = client.post("/translate", json={"texts": ["Dashboard"], "language": "English"}).json()
+    assert r["translations"] == ["Dashboard"]
+
+
 def test_admin_platform_stats():
     # generate some data as a regular user
     h, _ = _signup()

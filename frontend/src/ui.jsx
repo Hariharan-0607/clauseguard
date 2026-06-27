@@ -6,10 +6,10 @@ const UICtx = createContext(null)
 
 // localStorage-backed translation cache: { [lang]: { [english]: translated } }
 function loadCache() {
-  try { return JSON.parse(localStorage.getItem('cg_tcache') || '{}') } catch { return {} }
+  try { return JSON.parse(localStorage.getItem('cg_tcache_v2') || '{}') } catch { return {} }
 }
 function saveCache(c) {
-  try { localStorage.setItem('cg_tcache', JSON.stringify(c)) } catch { /* quota */ }
+  try { localStorage.setItem('cg_tcache_v2', JSON.stringify(c)) } catch { /* quota */ }
 }
 
 export function UIProvider({ children }) {

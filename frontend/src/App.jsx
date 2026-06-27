@@ -23,13 +23,14 @@ import Cases from './pages/Cases.jsx'
 import Estimate from './pages/Estimate.jsx'
 import Passport from './pages/Passport.jsx'
 import Agent from './pages/Agent.jsx'
+import Roles from './pages/Roles.jsx'
 import Login from './pages/Login.jsx'
 
 const UI_LANGS = [
   ['en', 'English'], ['hi', 'हिन्दी'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'], ['bn', 'বাংলা']
 ]
 
-const NAV_ITEMS = (tr) => [
+const NAV_ITEMS = (tr, role) => [
   ['/', 'home', tr('Home')],
   ['/advisor', 'chat', tr('Advisor')],
   ['/check', 'search', tr('Check')],
@@ -42,7 +43,9 @@ const NAV_ITEMS = (tr) => [
   ['/library', 'book', tr('Rights')],
   ['/deadlines', 'clock', tr('Deadlines')],
   ['/help', 'help', tr('Help')],
-  ['/history', 'file', tr('History')]
+  ['/history', 'file', tr('History')],
+  // admin-only
+  ...(role === 'admin' ? [['/roles', 'scale', tr('Roles')]] : [])
 ]
 
 // Floating sidebar (desktop). Starts expanded with labels; the toggle collapses it
@@ -53,7 +56,7 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
   const tr = useT()
   void version
   const [menu, setMenu] = useState(null) // 'lang' | 'user' | null
-  const items = NAV_ITEMS(tr)
+  const items = NAV_ITEMS(tr, user?.role)
   const currentLangName = (UI_LANGS.find(([c]) => c === lang) || ['', lang])[1]
 
   return (
@@ -113,7 +116,12 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
                 {(user.name || user.email || '?').charAt(0).toUpperCase()}
               </span>
               <span className="sb-label min-w-0 flex-1 text-left">
-                <span className="block truncate text-xs font-medium" style={{ color: 'var(--text)' }}>{user.name || 'Account'}</span>
+                <span className="block truncate text-xs font-medium" style={{ color: 'var(--text)' }}>
+                  {user.name || 'Account'}
+                  {user.role && user.role !== 'user' && (
+                    <span className="ml-1 rounded px-1 text-[9px] font-bold uppercase" style={{ background: 'var(--highlight)', color: 'var(--accent)' }}>{user.role}</span>
+                  )}
+                </span>
                 <span className="block truncate text-[11px]" style={{ color: 'var(--text-3)' }}>{user.email}</span>
               </span>
               <span className="sb-label inline-flex shrink-0" style={{ color: 'var(--text-3)' }} title={tr('Sign out')}>
@@ -213,7 +221,7 @@ function SidebarContent({ onNavigate }) {
   const { lang, setLang, dark, setDark, version } = useUI()
   const tr = useT()
   void version // re-render when translations arrive
-  const items = NAV_ITEMS(tr)
+  const items = NAV_ITEMS(tr, user?.role)
   return (
     <div className="flex h-full flex-col">
       <Link to="/" onClick={onNavigate} className="flex items-center gap-2.5 px-5 py-5">
@@ -347,6 +355,7 @@ export default function App() {
               <Route path="/estimate" element={<Protected><Estimate /></Protected>} />
               <Route path="/passport" element={<Protected><Passport /></Protected>} />
               <Route path="/agent" element={<Protected><Agent /></Protected>} />
+              <Route path="/roles" element={<Protected><Roles /></Protected>} />
               <Route path="/compare" element={<Protected><Compare /></Protected>} />
               <Route path="/result/:id" element={<Protected><Result /></Protected>} />
               <Route path="/letter/:id" element={<Protected><Letter /></Protected>} />

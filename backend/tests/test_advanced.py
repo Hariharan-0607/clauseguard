@@ -36,6 +36,59 @@ def test_permission_matrix():
     assert has_permission(Role.CASEWORKER, Permission.CASE_ASSIGN)
 
 
+def _admin_headers():
+    """The seeded demo account is an admin."""
+    tok = client.post("/auth/login", json={
+        "email": "demo@clauseguard.app", "password": "demo1234"}).json()["token"]
+    return {"Authorization": f"Bearer {tok}"}
+
+
+# --- Role management (admin) ---
+def test_signup_defaults_to_user_role():
+    h, _ = _signup()
+    assert client.get("/auth/me", headers=h).json()["role"] == "user"
+
+
+def test_non_admin_cannot_manage_roles():
+    h, _ = _signup()
+    assert client.get("/admin/users", headers=h).status_code == 403
+
+
+def test_admin_promotes_user_and_unlocks_gated_route():
+    # a plain user is blocked from the reviewer-only route
+    h, uid = _signup()
+    det = client.post("/detection/run", headers=h, json={
+        "domain": "human_rights", "text": HR_TEXT}).json()
+    fid = det["findings"][0]["id"]
+    assert client.patch(f"/detection/findings/{fid}/review", headers=h,
+                        json={"verdict": "confirmed"}).status_code == 403
+
+    # admin promotes them to reviewer
+    ah = _admin_headers()
+    promoted = client.patch(f"/admin/users/{uid}/role", headers=ah, json={"role": "reviewer"})
+    assert promoted.status_code == 200
+    assert promoted.json()["role"] == "reviewer"
+
+    # now the same user can review (new token reflects DB role on each request)
+    r = client.patch(f"/detection/findings/{fid}/review", headers=h, json={"verdict": "confirmed"})
+    assert r.status_code == 200
+    assert r.json()["review_verdict"] == "confirmed"
+
+
+def test_admin_cannot_self_demote():
+    ah = _admin_headers()
+    me = client.get("/auth/me", headers=ah).json()
+    r = client.patch(f"/admin/users/{me['id']}/role", headers=ah, json={"role": "user"})
+    assert r.status_code == 400
+
+
+def test_invalid_role_rejected():
+    ah = _admin_headers()
+    h, uid = _signup()
+    r = client.patch(f"/admin/users/{uid}/role", headers=ah, json={"role": "wizard"})
+    assert r.status_code == 400
+
+
 # --- Detection Engine ---
 def test_detection_domains_listed():
     domains = [d["domain"] for d in client.get("/detection/domains").json()]

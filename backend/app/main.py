@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.db import Base, engine, get_db, SessionLocal
 from app.models import Report, User
-from app.routers import (advise, agent, analyze, auth, cases, chat, compare,
-                         deadlines, detection, estimation, letters, library,
-                         passport, reports, translate)
+from app.routers import (admin, advise, agent, analyze, auth, cases, chat,
+                         compare, deadlines, detection, estimation, letters,
+                         library, passport, reports, translate)
 from app.services.ai import ai_health
 from app.services.auth import hash_password
 # Import services with event subscribers so their @subscribe handlers register.
@@ -23,11 +23,16 @@ DEMO_PASSWORD = "demo1234"
 
 
 def _seed_demo_user():
+    """Seed the demo account as an ADMIN so all RBAC roles are reachable in a demo."""
     db = SessionLocal()
     try:
-        if not db.query(User).filter(User.email == DEMO_EMAIL).first():
-            db.add(User(email=DEMO_EMAIL, name="Demo User",
+        existing = db.query(User).filter(User.email == DEMO_EMAIL).first()
+        if not existing:
+            db.add(User(email=DEMO_EMAIL, name="Demo User", role="admin",
                         password_hash=hash_password(DEMO_PASSWORD)))
+            db.commit()
+        elif existing.role != "admin":
+            existing.role = "admin"      # ensure the demo account can manage roles
             db.commit()
     finally:
         db.close()
@@ -48,7 +53,7 @@ app.add_middleware(
 )
 
 for r in (auth, analyze, letters, reports, chat, library, deadlines, translate, advise, compare,
-          detection, cases, estimation, agent, passport):
+          detection, cases, estimation, agent, passport, admin):
     app.include_router(r.router)
 
 

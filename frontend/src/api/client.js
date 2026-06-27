@@ -24,6 +24,10 @@ export const signup = (body) => fetch(`${BASE}/auth/signup`, { method: 'POST', h
 export const login = (body) => fetch(`${BASE}/auth/login`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
 export const me = () => fetch(`${BASE}/auth/me`, { headers: authHeaders() }).then(handle)
 
+// --- admin: role management ---
+export const listUsers = () => fetch(`${BASE}/admin/users`, { headers: authHeaders() }).then(handle)
+export const setUserRole = (id, role) => fetch(`${BASE}/admin/users/${id}/role`, { method: 'PATCH', headers: j(), body: JSON.stringify({ role }) }).then(handle)
+
 // --- analyze ---
 export const analyzeText = (b) => fetch(`${BASE}/analyze`, { method: 'POST', headers: j(), body: JSON.stringify(b) }).then(handle)
 export function analyzeFile({ file, language, jurisdiction, counterparty, title }) {

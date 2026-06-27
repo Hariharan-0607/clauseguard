@@ -12,7 +12,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 def _user_out(u: User) -> UserOut:
-    return UserOut(id=u.id, email=u.email, name=u.name or "")
+    return UserOut(id=u.id, email=u.email, name=u.name or "", role=u.role or "user")
 
 
 @router.post("/signup", response_model=TokenOut)

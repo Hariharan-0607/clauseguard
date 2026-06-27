@@ -20,11 +20,17 @@ class UserOut(BaseModel):
     id: str
     email: str
     name: str
+    role: str = "user"
 
 
 class TokenOut(BaseModel):
     token: str
     user: UserOut
+
+
+# --- admin: role management ---
+class RoleUpdate(BaseModel):
+    role: str                          # user | caseworker | reviewer | admin
 
 
 # --- analyze ---

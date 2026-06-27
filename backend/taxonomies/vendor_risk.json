@@ -1,0 +1,11 @@
+{
+  "domain": "vendor_risk",
+  "label": "Vendor Risk Assessment",
+  "description": "Assesses supplier/procurement/SLA/service contracts for risk and compliance exposure.",
+  "categories": [
+    {"id": "liability_risk", "label": "Liability Risk", "keywords": ["unlimited liability", "indemnify us against all", "no limitation of liability", "consequential damages", "hold harmless"], "default_severity": "high", "laws": {"IN": "Indian Contract Act, 1872", "US-CA": "CA Commercial Code"}},
+    {"id": "sla_weakness", "label": "SLA Weakness", "keywords": ["no uptime guarantee", "best effort", "no service credits", "no penalty for downtime", "as available"], "default_severity": "medium", "laws": {"IN": "Contractual SLA norms", "US-CA": "Contractual SLA norms"}},
+    {"id": "termination_risk", "label": "Termination Risk", "keywords": ["terminate for convenience", "no termination right", "auto-renew", "long lock-in", "early termination fee"], "default_severity": "medium", "laws": {"IN": "Indian Contract Act, 1872", "US-CA": "CA Commercial Code"}},
+    {"id": "data_compliance_risk", "label": "Data/Compliance Risk", "keywords": ["sub-process data", "no data protection", "transfer data abroad", "no audit right", "retain data indefinitely"], "default_severity": "high", "laws": {"IN": "DPDP Act, 2023", "US-CA": "CCPA/CPRA"}}
+  ]
+}

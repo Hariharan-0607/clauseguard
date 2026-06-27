@@ -1,0 +1,11 @@
+{
+  "domain": "consumer",
+  "label": "Consumer Rights Protection",
+  "description": "Analyzes T&Cs, refund/warranty/subscription policies for unfair consumer practices.",
+  "categories": [
+    {"id": "unfair_practice", "label": "Unfair Consumer Practice", "keywords": ["no refund", "all sales final", "non-cancellable", "we are not liable", "no warranty"], "default_severity": "high", "laws": {"IN": "Consumer Protection Act, 2019", "US-CA": "CA CLRA"}},
+    {"id": "hidden_charges", "label": "Hidden Charges", "keywords": ["additional fee", "convenience fee", "plus applicable taxes", "service charge", "handling fee"], "default_severity": "medium", "laws": {"IN": "Consumer Protection Act, 2019", "US-CA": "CA Bus & Prof Code 17500"}},
+    {"id": "misleading_policy", "label": "Misleading Policy", "keywords": ["lifetime warranty", "guaranteed", "risk free", "subject to change without notice", "as described may vary"], "default_severity": "medium", "laws": {"IN": "Consumer Protection Act, 2019 (misleading ads)", "US-CA": "FTC Act / CA UCL"}},
+    {"id": "unfair_restriction", "label": "Unfair Restriction", "keywords": ["cannot transfer", "void if opened", "no returns after", "warranty void", "restocking fee"], "default_severity": "medium", "laws": {"IN": "Consumer Protection Act, 2019", "US-CA": "Magnuson-Moss Warranty Act"}}
+  ]
+}

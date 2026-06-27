@@ -11,3 +11,8 @@ pdfplumber==0.11.4
 python-jose[cryptography]==3.3.0
 pytest==8.3.3
 httpx==0.27.2
+
+# --- Advanced modules: full stack (Postgres + ChromaDB + migrations) ---
+psycopg[binary]==3.2.3        # Postgres driver (SQLAlchemy uses postgresql+psycopg://)
+alembic==1.13.3               # schema migrations
+chromadb==0.5.15              # vector store (RAG / Personal Legal Agent)

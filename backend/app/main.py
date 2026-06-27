@@ -6,10 +6,14 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.db import Base, engine, get_db, SessionLocal
 from app.models import Report, User
-from app.routers import (advise, analyze, auth, chat, compare, deadlines,
-                         letters, library, reports, translate)
+from app.routers import (advise, agent, analyze, auth, cases, chat, compare,
+                         deadlines, detection, estimation, letters, library,
+                         passport, reports, translate)
 from app.services.ai import ai_health
 from app.services.auth import hash_password
+# Import services with event subscribers so their @subscribe handlers register.
+import app.services.cases  # noqa: F401  (registers case event subscribers)
+import app.services.agent  # noqa: F401  (registers agent memory subscribers)
 
 Base.metadata.create_all(bind=engine)
 
@@ -43,7 +47,8 @@ app.add_middleware(
     allow_methods=["*"], allow_headers=["*"],
 )
 
-for r in (auth, analyze, letters, reports, chat, library, deadlines, translate, advise, compare):
+for r in (auth, analyze, letters, reports, chat, library, deadlines, translate, advise, compare,
+          detection, cases, estimation, agent, passport):
     app.include_router(r.router)
 
 

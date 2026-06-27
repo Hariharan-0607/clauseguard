@@ -15,7 +15,13 @@ class Settings(BaseSettings):
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "llama3"
 
-    # --- Database (free tier: Supabase / Neon; sqlite for local/tests) ---
+    # --- Vector store (ChromaDB) — powers RAG / Personal Legal Agent ---
+    # When unset, the app falls back to an in-memory stub so tests/MVP keep working.
+    chroma_url: str = ""                  # e.g. "http://localhost:8001"
+    chroma_collection_prefix: str = "justiceai"
+    embedding_provider: str = "auto"      # auto | ollama | hash (hash = dep-free fallback)
+
+    # --- Database (Postgres in Docker; sqlite for local/tests) ---
     database_url: str = "sqlite:///./clauseguard.db"
 
     # --- Auth ---

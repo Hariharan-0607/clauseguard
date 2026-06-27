@@ -18,6 +18,11 @@ import Library from './pages/Library.jsx'
 import Topic from './pages/Topic.jsx'
 import Deadlines from './pages/Deadlines.jsx'
 import Directory from './pages/Directory.jsx'
+import Detection from './pages/Detection.jsx'
+import Cases from './pages/Cases.jsx'
+import Estimate from './pages/Estimate.jsx'
+import Passport from './pages/Passport.jsx'
+import Agent from './pages/Agent.jsx'
 import Login from './pages/Login.jsx'
 
 const UI_LANGS = [
@@ -28,6 +33,11 @@ const NAV_ITEMS = (tr) => [
   ['/', 'home', tr('Home')],
   ['/advisor', 'chat', tr('Advisor')],
   ['/check', 'search', tr('Check')],
+  ['/detection', 'shield', tr('Detection')],
+  ['/cases', 'file', tr('Cases')],
+  ['/estimate', 'briefcase', tr('Estimate')],
+  ['/passport', 'shield', tr('Passport')],
+  ['/agent', 'chat', tr('Agent')],
   ['/compare', 'compare', tr('Compare')],
   ['/library', 'book', tr('Rights')],
   ['/deadlines', 'clock', tr('Deadlines')],
@@ -63,8 +73,8 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
         </button>
       </div>
 
-      {/* nav */}
-      <nav className="flex-1 space-y-1 px-3">
+      {/* nav — scrollable so a long menu never pushes the footer controls off-screen */}
+      <nav className="sb-scroll min-h-0 flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3">
         {items.map(([to, icon, label]) => (
           <SidebarLink key={to} to={to} icon={icon} label={label} collapsed={collapsed} onSelect={onSelect} />
         ))}
@@ -213,7 +223,7 @@ function SidebarContent({ onNavigate }) {
         <span className="text-[17px] font-bold tracking-tight" style={{ color: 'var(--text)' }}>ClauseGuard</span>
       </Link>
 
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3">
         {items.map(([to, icon, label]) => (
           <NavLink key={to} to={to} end={to === '/'} onClick={onNavigate}
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition"
@@ -332,6 +342,11 @@ export default function App() {
               <Route path="/" element={<Protected><Home /></Protected>} />
               <Route path="/advisor" element={<Protected><Advisor /></Protected>} />
               <Route path="/check" element={<Protected><Upload /></Protected>} />
+              <Route path="/detection" element={<Protected><Detection /></Protected>} />
+              <Route path="/cases" element={<Protected><Cases /></Protected>} />
+              <Route path="/estimate" element={<Protected><Estimate /></Protected>} />
+              <Route path="/passport" element={<Protected><Passport /></Protected>} />
+              <Route path="/agent" element={<Protected><Agent /></Protected>} />
               <Route path="/compare" element={<Protected><Compare /></Protected>} />
               <Route path="/result/:id" element={<Protected><Result /></Protected>} />
               <Route path="/letter/:id" element={<Protected><Letter /></Protected>} />

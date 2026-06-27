@@ -98,6 +98,15 @@ def _extract_json(text: str) -> dict:
         return {}
 
 
+def call_llm_json(prompt: str, system: str = "") -> dict:
+    """Shared helper for the advanced modules: prompt the LLM and parse one JSON object.
+
+    Returns {} if the model returns no parseable JSON, so callers can apply defaults.
+    Reuses the same provider switch + mock support as `call_llm`.
+    """
+    return _extract_json(call_llm(prompt, system))
+
+
 # --------------------------------------------------------------------------- #
 #  High-level: per-clause explain + classify (+ fair rewrite) in one round-trip
 # --------------------------------------------------------------------------- #
@@ -297,10 +306,81 @@ Give practical guidance, all written in {language}. Respond ONLY with a JSON obj
 
 
 # --------------------------------------------------------------------------- #
+#  Detection Engine — assess one candidate category against the text
+# --------------------------------------------------------------------------- #
+def assess_violation(text: str, category_label: str, domain_label: str,
+                     law: str, language: str) -> dict:
+    """Ask the LLM to judge whether `category_label` is present in `text`.
+
+    Returns {present, probability, confidence, severity, evidence, explanation,
+    recommended_actions}. Used by the Detection Engine after a keyword pre-screen.
+    """
+    system = (
+        f"You are JusticeAI's {domain_label} analyst. You assess documents and situations "
+        "for ordinary people (workers, tenants, consumers, migrants). You are precise, never "
+        "exaggerate, and you ground findings in the quoted text. You are not a lawyer."
+    )
+    prompt = f"""Assess whether the issue "{category_label}" is present in the text below.
+Applicable law (for context): {law or 'general principles'}.
+
+TEXT:
+\"\"\"{text[:3500]}\"\"\"
+
+Respond ONLY with a JSON object, all prose written in {language}:
+{{
+  "present": true or false,
+  "probability": 0.0 to 1.0,   // likelihood the issue is genuinely present
+  "confidence": 0.0 to 1.0,    // your confidence in this judgement
+  "severity": "low | medium | high | critical",
+  "evidence": "the exact phrase(s) from the text that support this (empty if absent)",
+  "explanation": "one or two plain sentences explaining the finding",
+  "recommended_actions": ["1-3 concrete next steps for the person"]
+}}"""
+    data = call_llm_json(prompt, system)
+    sev = str(data.get("severity", "low")).lower().strip()
+    if sev not in ("low", "medium", "high", "critical"):
+        sev = "low"
+
+    def _f(key):
+        try:
+            return max(0.0, min(1.0, float(data.get(key, 0))))
+        except (TypeError, ValueError):
+            return 0.0
+
+    actions = data.get("recommended_actions", [])
+    actions = [str(a) for a in actions][:3] if isinstance(actions, list) else []
+    return {
+        "present": bool(data.get("present", False)),
+        "probability": _f("probability"),
+        "confidence": _f("confidence"),
+        "severity": sev,
+        "evidence": str(data.get("evidence", "")),
+        "explanation": str(data.get("explanation", "")),
+        "recommended_actions": actions,
+    }
+
+
+# --------------------------------------------------------------------------- #
 #  Deterministic offline stub (AI_MOCK=true) — keeps tests/demos free & stable
 # --------------------------------------------------------------------------- #
 def _mock(prompt: str) -> str:
     low = prompt.lower()
+    if '"present"' in low and '"probability"' in low:
+        # Detection engine: the engine only calls the LLM after a keyword pre-screen,
+        # so a candidate reaching here is treated as a likely, medium-high finding.
+        return json.dumps({
+            "present": True,
+            "probability": 0.78,
+            "confidence": 0.7,
+            "severity": "high",
+            "evidence": "the clause/text flagged by the keyword screen",
+            "explanation": "This appears to disadvantage the person and may breach the cited law.",
+            "recommended_actions": [
+                "Keep a copy of this document and note the date.",
+                "Raise the issue in writing and request a correction.",
+                "Contact local legal aid or the relevant authority if unresolved.",
+            ],
+        })
     if '"verdict"' in low:
         if "deposit" in low or "deduct" in low or "forfeit" in low:
             v, r = "illegal", "Keeping the full deposit for any reason is not allowed."

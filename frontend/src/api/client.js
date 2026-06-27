@@ -89,5 +89,43 @@ export const translateBatch = (texts, language) =>
   fetch(`${BASE}/translate`, { method: 'POST', headers: j(), body: JSON.stringify({ texts, language }) })
     .then(handle).then((d) => d.translations)
 
+// =========================================================================== //
+//  ADVANCED MODULES
+// =========================================================================== //
+
+// --- Detection Engine (Human Rights, Exploitation, Consumer, Dark Patterns, HR, Vendor) ---
+export const listDetectionDomains = () => fetch(`${BASE}/detection/domains`).then(handle)
+export const runDetection = (body) => fetch(`${BASE}/detection/run`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+// body: { domain, text, jurisdiction, language, title, subject, region, industry }
+export const listDetections = (domain) => fetch(`${BASE}/detection/detections${domain ? `?domain=${domain}` : ''}`, { headers: authHeaders() }).then(handle)
+export const getDetection = (id) => fetch(`${BASE}/detection/detections/${id}`, { headers: authHeaders() }).then(handle)
+export const reviewFinding = (id, verdict) => fetch(`${BASE}/detection/findings/${id}/review`, { method: 'PATCH', headers: j(), body: JSON.stringify({ verdict }) }).then(handle)
+export const detectionAnalytics = (domain, days = 90) => fetch(`${BASE}/detection/analytics/${domain}?days=${days}`, { headers: authHeaders() }).then(handle)
+
+// --- Case Management ---
+export const createCase = (body) => fetch(`${BASE}/cases`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const listCases = () => fetch(`${BASE}/cases`, { headers: authHeaders() }).then(handle)
+export const getCase = (id) => fetch(`${BASE}/cases/${id}`, { headers: authHeaders() }).then(handle)
+export const updateCase = (id, body) => fetch(`${BASE}/cases/${id}`, { method: 'PATCH', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const addCaseEvent = (id, body) => fetch(`${BASE}/cases/${id}/events`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const addCaseEvidence = (id, body) => fetch(`${BASE}/cases/${id}/evidence`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const caseAnalytics = () => fetch(`${BASE}/cases/analytics`, { headers: authHeaders() }).then(handle)
+
+// --- Estimation (Compensation + Settlement) ---
+export const estimateCompensation = (body) => fetch(`${BASE}/estimation/compensation`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const estimateSettlement = (body) => fetch(`${BASE}/estimation/settlement`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const estimateCost = (body) => fetch(`${BASE}/estimation/cost`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const listEstimates = () => fetch(`${BASE}/estimation/estimates`, { headers: authHeaders() }).then(handle)
+
+// --- Protection Passports (Worker / Migrant / Rental) ---
+export const getPassport = (kind) => fetch(`${BASE}/passport/${kind}`, { headers: authHeaders() }).then(handle)
+export const updatePassport = (kind, body) => fetch(`${BASE}/passport/${kind}`, { method: 'PATCH', headers: j(), body: JSON.stringify(body) }).then(handle)
+
+// --- Personal Legal AI Agent ---
+export const agentChat = (body) => fetch(`${BASE}/agent/chat`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const listMemories = () => fetch(`${BASE}/agent/memories`, { headers: authHeaders() }).then(handle)
+export const addMemory = (body) => fetch(`${BASE}/agent/memories`, { method: 'POST', headers: j(), body: JSON.stringify(body) }).then(handle)
+export const deleteMemory = (id) => fetch(`${BASE}/agent/memories/${id}`, { method: 'DELETE', headers: authHeaders() }).then(handle)
+
 // --- misc ---
 export const aiHealth = () => fetch(`${BASE}/health/ai`).then(handle)

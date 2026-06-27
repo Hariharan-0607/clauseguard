@@ -133,6 +133,12 @@ body {
   .sb-rail .sb-toggle { margin-left: auto; }
 }
 
+/* Slim, theme-aware scrollbar for the scrollable sidebar nav. */
+.sb-scroll { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.sb-scroll::-webkit-scrollbar { width: 6px; }
+.sb-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+.sb-scroll::-webkit-scrollbar-track { background: transparent; }
+
 /* tooltips only matter when collapsed (labels are visible otherwise) */
 
 /* --- Print / "Export PDF" --- */

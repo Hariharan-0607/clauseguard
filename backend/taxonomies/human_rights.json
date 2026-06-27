@@ -1,0 +1,63 @@
+{
+  "domain": "human_rights",
+  "label": "Human Rights Monitoring",
+  "description": "Detects human-rights violations in employment and housing documents/situations.",
+  "categories": [
+    {
+      "id": "forced_labor",
+      "label": "Forced Labor",
+      "keywords": ["cannot leave", "passport held", "bonded", "work off the debt", "forced to work", "confiscate passport", "withhold documents"],
+      "default_severity": "critical",
+      "laws": {"IN": "Bonded Labour System (Abolition) Act, 1976", "US-CA": "Trafficking Victims Protection Act"}
+    },
+    {
+      "id": "workplace_discrimination",
+      "label": "Workplace Discrimination",
+      "keywords": ["only male", "only female", "no pregnant", "based on caste", "based on religion", "married women not", "discriminat"],
+      "default_severity": "high",
+      "laws": {"IN": "Equal Remuneration Act, 1976; Constitution Art. 15", "US-CA": "Title VII; CA FEHA"}
+    },
+    {
+      "id": "harassment",
+      "label": "Harassment",
+      "keywords": ["sexual favor", "harass", "abusive language", "threaten", "intimidat"],
+      "default_severity": "high",
+      "laws": {"IN": "POSH Act, 2013", "US-CA": "CA FEHA"}
+    },
+    {
+      "id": "unlawful_salary_deduction",
+      "label": "Unlawful Salary Deductions",
+      "keywords": ["deduct from salary", "fine of", "penalty deducted", "no pay for", "forfeit wages", "deduct wages"],
+      "default_severity": "high",
+      "laws": {"IN": "Payment of Wages Act, 1936 (s.7)", "US-CA": "CA Labor Code 221"}
+    },
+    {
+      "id": "illegal_eviction",
+      "label": "Illegal Eviction",
+      "keywords": ["evict without notice", "lock you out", "remove your belongings", "vacate within 24", "throw out", "cut off water"],
+      "default_severity": "critical",
+      "laws": {"IN": "Rent Control Act (state); transfer of property act", "US-CA": "CA Civil Code 1940-1954"}
+    },
+    {
+      "id": "child_labor",
+      "label": "Child Labor Indicators",
+      "keywords": ["under 14", "under 18 hazardous", "minor employed", "child worker", "below minimum age"],
+      "default_severity": "critical",
+      "laws": {"IN": "Child Labour (Prohibition and Regulation) Act, 1986", "US-CA": "FLSA child labor provisions"}
+    },
+    {
+      "id": "unsafe_conditions",
+      "label": "Unsafe Working Conditions",
+      "keywords": ["no safety equipment", "no protective gear", "hazardous without", "no ventilation", "unsafe machinery", "no first aid"],
+      "default_severity": "high",
+      "laws": {"IN": "Occupational Safety, Health and Working Conditions Code, 2020", "US-CA": "Cal/OSHA"}
+    },
+    {
+      "id": "retaliation",
+      "label": "Retaliation Against Workers",
+      "keywords": ["terminate if you complain", "fired for reporting", "no complaints allowed", "punish for union", "retaliat"],
+      "default_severity": "high",
+      "laws": {"IN": "Industrial Disputes Act, 1947", "US-CA": "CA Labor Code 1102.5 (whistleblower)"}
+    }
+  ]
+}

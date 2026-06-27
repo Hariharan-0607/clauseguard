@@ -1,0 +1,10 @@
+{
+  "domain": "hr_compliance",
+  "label": "HR Compliance",
+  "description": "Analyzes employment contracts, offer letters and HR policies for labor-law compliance gaps.",
+  "categories": [
+    {"id": "compliance_violation", "label": "Compliance Violation", "keywords": ["no leave", "no provident fund", "no esi", "below minimum wage", "no payslip", "unlimited hours"], "default_severity": "high", "laws": {"IN": "Code on Wages 2019; EPF Act 1952", "US-CA": "FLSA; CA Labor Code"}},
+    {"id": "missing_protection", "label": "Missing Protection", "keywords": ["no notice period", "terminate immediately", "no severance", "no maternity", "no grievance"], "default_severity": "medium", "laws": {"IN": "Maternity Benefit Act 1961; Industrial Disputes Act", "US-CA": "CFRA; CA WARN Act"}},
+    {"id": "labor_law_risk", "label": "Labor Law Risk", "keywords": ["non-compete", "garden leave", "clawback", "bond period", "exclusive service", "no moonlighting"], "default_severity": "medium", "laws": {"IN": "Indian Contract Act s.27 (non-compete largely void)", "US-CA": "CA Bus & Prof Code 16600 (non-competes void)"}}
+  ]
+}

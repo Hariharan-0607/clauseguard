@@ -1,0 +1,12 @@
+{
+  "domain": "dark_patterns",
+  "label": "Dark Pattern Detection",
+  "description": "Detects manipulative UX and deceptive interface/consent patterns in policies and flows.",
+  "categories": [
+    {"id": "forced_consent", "label": "Forced Consent", "keywords": ["by continuing you agree", "must accept all", "consent required to proceed", "agree to all cookies", "no opt out"], "default_severity": "high", "laws": {"IN": "DPDP Act, 2023", "US-CA": "CCPA/CPRA"}},
+    {"id": "subscription_trap", "label": "Subscription Trap", "keywords": ["auto-renew", "automatically renew", "cancel anytime difficult", "free trial then charged", "negative option"], "default_severity": "high", "laws": {"IN": "Consumer Protection (E-Commerce) Rules", "US-CA": "CA Auto-Renewal Law (ARL)"}},
+    {"id": "hidden_fees_ux", "label": "Hidden Fees (UX)", "keywords": ["fees added at checkout", "drip pricing", "additional charges at final step", "service fee at payment"], "default_severity": "medium", "laws": {"IN": "Consumer Protection Act, 2019", "US-CA": "CA UCL"}},
+    {"id": "manipulative_ux", "label": "Manipulative UX", "keywords": ["only 1 left", "limited time", "others are viewing", "confirmshaming", "pre-ticked", "pre-selected"], "default_severity": "medium", "laws": {"IN": "CCPA dark patterns guidelines 2023", "US-CA": "FTC dark patterns guidance"}},
+    {"id": "misleading_interface", "label": "Misleading Interface", "keywords": ["disguised ad", "fake button", "misdirection", "hidden unsubscribe", "trick question"], "default_severity": "medium", "laws": {"IN": "CCPA dark patterns guidelines 2023", "US-CA": "FTC Act 5"}}
+  ]
+}

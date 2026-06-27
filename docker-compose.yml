@@ -1,0 +1,58 @@
+# JusticeAI / ClauseGuard — full advanced stack.
+#
+#   docker compose up --build
+#
+# Brings up Postgres + ChromaDB and runs the API against them. The frontend talks
+# to the API on :8000. Without these services the app still runs on SQLite +
+# in-memory vector store (see config.py fallbacks), but the advanced modules are
+# designed for this stack.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: justiceai
+      POSTGRES_PASSWORD: justiceai
+      POSTGRES_DB: justiceai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U justiceai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  chroma:
+    image: chromadb/chroma:0.5.15
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadata:/chroma/chroma
+    environment:
+      IS_PERSISTENT: "TRUE"
+
+  api:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+psycopg://justiceai:justiceai@db:5432/justiceai
+      CHROMA_URL: http://chroma:8000
+      AI_PROVIDER: ${AI_PROVIDER:-groq}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      AI_MOCK: ${AI_MOCK:-false}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    ports:
+      - "8000:8000"
+    # Run migrations before serving so the schema is always current.
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  pgdata:
+  chromadata:

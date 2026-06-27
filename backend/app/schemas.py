@@ -197,3 +197,230 @@ class PlanSummary(BaseModel):
     category: str
     urgency: str
     summary: str
+
+
+# =========================================================================== #
+#  ADVANCED MODULE SCHEMAS
+# =========================================================================== #
+
+# --- Detection Engine ---
+class DetectionRequest(BaseModel):
+    domain: str                        # human_rights | exploitation | consumer | ...
+    text: str
+    jurisdiction: str = "IN"
+    language: str = "en"
+    title: str = "Document"
+    subject: str = ""
+    region: str = ""
+    industry: str = ""
+
+
+class FindingOut(BaseModel):
+    id: int
+    category: str
+    category_label: str
+    severity: str
+    probability: float
+    confidence: float
+    evidence: str
+    explanation: str
+    laws: List[str]
+    recommended_actions: List[str]
+    reviewed: bool
+    review_verdict: str
+
+
+class DetectionOut(BaseModel):
+    id: str
+    domain: str
+    jurisdiction: str
+    language: str
+    title: str
+    subject: str
+    region: str
+    industry: str
+    risk_score: float
+    severity: str
+    findings: List[FindingOut]
+
+
+class DetectionSummary(BaseModel):
+    id: str
+    domain: str
+    title: str
+    risk_score: float
+    severity: str
+    finding_count: int
+
+
+class ReviewRequest(BaseModel):
+    verdict: str                       # confirmed | dismissed | adjusted
+
+
+class DomainInfo(BaseModel):
+    domain: str
+    label: str
+    description: str
+    categories: List[dict]
+
+
+# --- Case Management ---
+class CaseCreate(BaseModel):
+    title: str
+    category: str = "other"
+    jurisdiction: str = "IN"
+    priority: str = "medium"
+    summary: str = ""
+    detection_id: Optional[str] = None
+
+
+class CaseUpdate(BaseModel):
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    assignee_id: Optional[str] = None
+    summary: Optional[str] = None
+
+
+class CaseEventIn(BaseModel):
+    kind: str = "note"
+    title: str = ""
+    body: str = ""
+
+
+class CaseEventOut(BaseModel):
+    id: int
+    created_at: str
+    actor_id: Optional[str] = None
+    kind: str
+    title: str
+    body: str
+
+
+class EvidenceIn(BaseModel):
+    label: str
+    kind: str = "document"
+    description: str = ""
+    detection_id: Optional[str] = None
+
+
+class EvidenceOut(BaseModel):
+    id: int
+    label: str
+    kind: str
+    description: str
+    detection_id: Optional[str] = None
+
+
+class CaseOut(BaseModel):
+    id: str
+    title: str
+    category: str
+    jurisdiction: str
+    status: str
+    priority: str
+    summary: str
+    owner_id: str
+    assignee_id: Optional[str] = None
+    detection_id: Optional[str] = None
+    events: List[CaseEventOut] = []
+    evidence: List[EvidenceOut] = []
+
+
+class CaseSummary(BaseModel):
+    id: str
+    title: str
+    category: str
+    status: str
+    priority: str
+
+
+# --- Estimation (Compensation + Settlement) ---
+class CompensationRequest(BaseModel):
+    claim_type: str                    # wage_theft|overtime|deposit|consumer|insurance|benefits
+    currency: str = "INR"
+    inputs: dict                       # numbers specific to the claim type
+    jurisdiction: str = "IN"
+    case_id: Optional[str] = None
+
+
+class SettlementRequest(BaseModel):
+    case_id: Optional[str] = None
+    claim_amount: float
+    currency: str = "INR"
+    evidence_strength: float = 0.5     # 0..1
+    detection_id: Optional[str] = None
+    jurisdiction: str = "IN"
+
+
+class CostRequest(BaseModel):
+    forum: str = "civil_court"         # consumer_forum|labour_court|civil_court|high_court|tribunal
+    complexity: float = 1.0            # 0.5 simple .. 2.0 complex
+    claim_amount: float = 0.0
+    currency: str = "INR"
+    jurisdiction: str = "IN"
+    case_id: Optional[str] = None
+
+
+class EstimateLineItem(BaseModel):
+    label: str
+    amount: float
+    note: str = ""
+
+
+class EstimateOut(BaseModel):
+    id: Optional[str] = None
+    kind: str
+    currency: str
+    amount_low: float
+    amount_mid: float
+    amount_high: float
+    probability: float = 0.0
+    breakdown: List[EstimateLineItem]
+    legal_basis: List[str]
+    notes: str = ""
+
+
+# --- Personal Legal Agent ---
+class AgentChatRequest(BaseModel):
+    message: str
+    jurisdiction: str = "IN"
+    language: str = "en"
+
+
+class AgentChatResponse(BaseModel):
+    answer: str
+    used_memories: List[str] = []
+
+
+class MemoryIn(BaseModel):
+    content: str
+    kind: str = "fact"
+    source: str = ""
+
+
+class MemoryOut(BaseModel):
+    id: str
+    kind: str
+    content: str
+    source: str
+
+
+# --- Protection Passports (Worker / Migrant / Rental) ---
+class PassportUpdate(BaseModel):
+    display_name: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    records: Optional[dict] = None
+
+
+class PassportDashboard(BaseModel):
+    id: str
+    kind: str
+    display_name: str
+    jurisdiction: str
+    trust_score: int
+    trust_band: str
+    risk_factors: List[str]
+    rights: List[str]
+    record_completeness: int
+    stats: dict
+    recent_findings: List[dict]

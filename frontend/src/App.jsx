@@ -26,6 +26,7 @@ import Agent from './pages/Agent.jsx'
 import Roles from './pages/Roles.jsx'
 import Queue from './pages/Queue.jsx'
 import Review from './pages/Review.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 import Login from './pages/Login.jsx'
 
 const UI_LANGS = [
@@ -64,22 +65,22 @@ const NAV_ITEMS = (tr, role) => {
     ['/library', 'book', tr('Rights')],
     ['/help', 'help', tr('Help')],
   ]
+  // Admin is an operator/overseer — oversight tools only, NOT the consumer app.
+  const admin = [
+    ['/dashboard', 'home', tr('Dashboard')],
+    ['/review', 'scale', tr('Review')],
+    ['/queue', 'briefcase', tr('Cases')],
+    ['/detection', 'shield', tr('Detection')],
+    ['/roles', 'scale', tr('Roles')],
+  ]
   if (role === 'caseworker') return caseworker
   if (role === 'reviewer') return reviewer
-  if (role === 'admin') {
-    // admin sees everything plus the staff worklists and role management
-    return [
-      ...user,
-      ['/queue', 'briefcase', tr('Queue')],
-      ['/review', 'scale', tr('Review')],
-      ['/roles', 'scale', tr('Roles')],
-    ]
-  }
+  if (role === 'admin') return admin
   return user
 }
 
 // Where each role lands after sign-in (their primary workspace).
-const ROLE_HOME = { caseworker: '/queue', reviewer: '/review' }
+const ROLE_HOME = { caseworker: '/queue', reviewer: '/review', admin: '/dashboard' }
 
 // Floating sidebar (desktop). Starts expanded with labels; the toggle collapses it
 // to a slim icon rail with an animated width transition. Detached from the edge (floats).
@@ -391,6 +392,7 @@ export default function App() {
               <Route path="/roles" element={<Protected><Roles /></Protected>} />
               <Route path="/queue" element={<Protected><Queue /></Protected>} />
               <Route path="/review" element={<Protected><Review /></Protected>} />
+              <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
               <Route path="/compare" element={<Protected><Compare /></Protected>} />
               <Route path="/result/:id" element={<Protected><Result /></Protected>} />
               <Route path="/letter/:id" element={<Protected><Letter /></Protected>} />

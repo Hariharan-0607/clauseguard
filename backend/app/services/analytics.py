@@ -12,7 +12,45 @@ from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.models import Detection, DetectionFinding
+from app.models import (Case, Detection, DetectionFinding, Estimate, User)
+
+
+def platform_stats(db: Session) -> dict:
+    """Platform-wide oversight stats for the admin dashboard."""
+    users = db.query(User).all()
+    by_role = Counter(u.role or "user" for u in users)
+
+    dets = db.query(Detection).all()
+    det_by_domain = Counter(d.domain for d in dets)
+    det_by_severity = Counter(d.severity for d in dets)
+
+    findings = db.query(DetectionFinding).all()
+    pending_review = sum(1 for f in findings if not f.reviewed)
+    reviewed = sum(1 for f in findings if f.reviewed)
+
+    cases = db.query(Case).all()
+    case_by_status = Counter(c.status for c in cases)
+    resolved = case_by_status.get("resolved", 0) + case_by_status.get("closed", 0)
+
+    return {
+        "users": {"total": len(users), "by_role": dict(by_role)},
+        "detections": {
+            "total": len(dets),
+            "by_domain": dict(det_by_domain),
+            "by_severity": dict(det_by_severity),
+        },
+        "findings": {
+            "total": len(findings),
+            "pending_review": pending_review,
+            "reviewed": reviewed,
+        },
+        "cases": {
+            "total": len(cases),
+            "by_status": dict(case_by_status),
+            "resolution_rate": round(resolved / len(cases), 2) if cases else 0.0,
+        },
+        "estimates": {"total": db.query(func.count(Estimate.id)).scalar() or 0},
+    }
 
 
 def dashboard(db: Session, domain: str, days: int = 90) -> dict:

@@ -82,6 +82,24 @@ def test_admin_cannot_self_demote():
     assert r.status_code == 400
 
 
+def test_admin_platform_stats():
+    # generate some data as a regular user
+    h, _ = _signup()
+    client.post("/detection/run", headers=h, json={
+        "domain": "human_rights", "text": HR_TEXT, "title": "Stats contract"})
+    client.post("/cases", headers=h, json={"title": "Stats case", "category": "wages"})
+
+    # non-admin cannot see platform stats
+    assert client.get("/admin/stats", headers=h).status_code == 403
+
+    # admin gets the aggregated oversight view
+    s = client.get("/admin/stats", headers=_admin_headers()).json()
+    assert s["users"]["total"] >= 1 and "by_role" in s["users"]
+    assert s["detections"]["total"] >= 1
+    assert "pending_review" in s["findings"]
+    assert s["cases"]["total"] >= 1 and "resolution_rate" in s["cases"]
+
+
 def test_invalid_role_rejected():
     ah = _admin_headers()
     h, uid = _signup()

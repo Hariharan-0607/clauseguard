@@ -11,6 +11,7 @@ from app.core.roles import Permission, Role
 from app.db import get_db
 from app.models import User
 from app.schemas import RoleUpdate, UserOut
+from app.services import analytics
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -19,6 +20,13 @@ _VALID_ROLES = {r.value for r in Role}
 
 def _out(u: User) -> UserOut:
     return UserOut(id=u.id, email=u.email, name=u.name or "", role=u.role or "user")
+
+
+@router.get("/stats")
+def platform_stats(db: Session = Depends(get_db),
+                   admin: User = Depends(require_permission(Permission.USER_MANAGE))):
+    """Platform-wide oversight statistics for the admin dashboard."""
+    return analytics.platform_stats(db)
 
 
 @router.get("/users", response_model=list[UserOut])

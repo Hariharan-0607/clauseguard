@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { detectionAnalytics, listDetectionDomains, runDetection } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const SEV_COLOR = {
@@ -12,7 +13,7 @@ const SEV_COLOR = {
 }
 
 function SeverityChip({ severity }) {
-  return <span className={`chip ${SEV_COLOR[severity] || SEV_COLOR.low}`}>{severity}</span>
+  return <span className={`chip ${SEV_COLOR[severity] || SEV_COLOR.low}`}><T>{severity}</T></span>
 }
 
 // Dashboard widget — reusable severity/category snapshot for a domain.
@@ -33,7 +34,7 @@ export function DetectionDashboard({ domain }) {
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-mute"><T>Top categories</T></p>
           {data.top_categories.slice(0, 5).map(([label, count]) => (
             <div key={label} className="flex justify-between py-0.5 text-sm">
-              <span className="text-ink">{label}</span><span className="text-mute">{count}</span>
+              <span className="text-ink"><T>{label}</T></span><span className="text-mute">{count}</span>
             </div>
           ))}
         </div>
@@ -52,6 +53,7 @@ function Stat({ label, value }) {
 }
 
 export default function Detection() {
+  const tr = useT()
   const [domains, setDomains] = useState([])
   const [domain, setDomain] = useState('human_rights')
   const [form, setForm] = useState({ text: '', title: 'Document', subject: '', region: '', industry: '', jurisdiction: 'IN' })
@@ -83,24 +85,24 @@ export default function Detection() {
             {domains.map((d) => (
               <button key={d.domain} onClick={() => setDomain(d.domain)}
                 className={`chip ${domain === d.domain ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>
-                {d.label}
+                {tr(d.label)}
               </button>
             ))}
           </div>
-          <input className="field" placeholder="Title" value={form.title}
+          <input className="field" placeholder={tr('Title')} value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <div className="grid gap-2 sm:grid-cols-3">
-            <input className="field" placeholder="Subject (employer/landlord)" value={form.subject}
+            <input className="field" placeholder={tr('Subject (employer/landlord)')} value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })} />
-            <input className="field" placeholder="Region" value={form.region}
+            <input className="field" placeholder={tr('Region')} value={form.region}
               onChange={(e) => setForm({ ...form, region: e.target.value })} />
-            <input className="field" placeholder="Industry" value={form.industry}
+            <input className="field" placeholder={tr('Industry')} value={form.industry}
               onChange={(e) => setForm({ ...form, industry: e.target.value })} />
           </div>
-          <textarea className="field min-h-[160px]" placeholder="Paste the contract / policy / situation text here…"
+          <textarea className="field min-h-[160px]" placeholder={tr('Paste the contract / policy / situation text here…')}
             value={form.text} onChange={(e) => setForm({ ...form, text: e.target.value })} />
           <button onClick={run} disabled={loading} className="btn-primary">
-            {loading ? 'Scanning…' : 'Run detection'}
+            {loading ? tr('Scanning…') : tr('Run detection')}
           </button>
         </section>
 
@@ -117,7 +119,7 @@ export default function Detection() {
             {result.findings.map((f) => (
               <div key={f.id} className="card p-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-ink">{f.category_label}</span>
+                  <span className="font-semibold text-ink">{tr(f.category_label)}</span>
                   <SeverityChip severity={f.severity} />
                 </div>
                 <p className="mt-1 text-sm text-ink">{f.explanation}</p>

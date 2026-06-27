@@ -4,6 +4,7 @@ import { caseAnalytics, listCases, updateCase } from '../api/client.js'
 import { useAuth } from '../auth.jsx'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 // Caseworkers and admins manage the shared case queue.
@@ -21,6 +22,7 @@ const PRIORITY_COLOR = {
 
 export default function Queue() {
   const { user } = useAuth()
+  const tr = useT()
   const nav = useNavigate()
   const [rows, setRows] = useState([])
   const [stats, setStats] = useState(null)
@@ -68,10 +70,10 @@ export default function Queue() {
 
       <div className="flex flex-wrap gap-2">
         <button onClick={() => setFilter('all')}
-          className={`chip ${filter === 'all' ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>all</button>
+          className={`chip ${filter === 'all' ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>{tr('all')}</button>
         {STATUSES.map((s) => (
           <button key={s} onClick={() => setFilter(s)}
-            className={`chip ${filter === s ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>{s}</button>
+            className={`chip ${filter === s ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>{tr(s)}</button>
         ))}
       </div>
 
@@ -83,12 +85,12 @@ export default function Queue() {
             <button onClick={() => nav(`/cases?open=${c.id}`)} className="min-w-0 flex-1 text-left">
               <div className="truncate font-semibold text-ink">{c.title}</div>
               <div className="text-xs text-mute">
-                {c.category} · <span className={`font-medium ${PRIORITY_COLOR[c.priority]}`}>{c.priority}</span>
+                {tr(c.category)} · <span className={`font-medium ${PRIORITY_COLOR[c.priority]}`}>{tr(c.priority)}</span>
               </div>
             </button>
-            <span className={`chip ${STATUS_COLOR[c.status]}`}>{c.status}</span>
+            <span className={`chip ${STATUS_COLOR[c.status]}`}>{tr(c.status)}</span>
             <button onClick={() => claim(c)} className="rounded-lg border px-2.5 py-1 text-xs font-medium"
-              style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }} title="Assign to me">
+              style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }} title={tr('Assign to me')}>
               <T>Claim</T>
             </button>
             <button onClick={() => advance(c)} disabled={['resolved', 'closed'].includes(c.status)}

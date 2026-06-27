@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { addMemory, agentChat, deleteMemory, listMemories } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 function Memories() {
+  const tr = useT()
   const [mems, setMems] = useState([])
   const [text, setText] = useState('')
   const load = () => listMemories().then(setMems).catch(() => {})
@@ -15,7 +17,7 @@ function Memories() {
     <section className="card p-5">
       <h3 className="font-bold" style={{ color: 'var(--navy)' }}><T>What the agent remembers</T></h3>
       <div className="mt-3 flex gap-2">
-        <input className="field flex-1" placeholder="Tell the agent a fact…" value={text}
+        <input className="field flex-1" placeholder={tr('Tell the agent a fact…')} value={text}
           onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} />
         <button onClick={add} className="btn-primary">+</button>
       </div>
@@ -33,6 +35,7 @@ function Memories() {
 }
 
 export default function Agent() {
+  const tr = useT()
   const [msgs, setMsgs] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -80,7 +83,7 @@ export default function Agent() {
             <div ref={endRef} />
           </div>
           <div className="mt-3 flex gap-2">
-            <input className="field flex-1" placeholder="Type a message…" value={input}
+            <input className="field flex-1" placeholder={tr('Type a message…')} value={input}
               onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} />
             <button onClick={send} disabled={loading} className="btn-primary"><T>Send</T></button>
           </div>

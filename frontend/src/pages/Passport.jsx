@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getPassport, updatePassport } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const KINDS = [
@@ -20,6 +21,7 @@ const FIELDS = {
 const BAND_COLOR = { strong: 'text-green-600', moderate: 'text-amber-600', 'at risk': 'text-red-600' }
 
 export default function Passport() {
+  const tr = useT()
   const [kind, setKind] = useState('worker')
   const [data, setData] = useState(null)
   const [form, setForm] = useState({})
@@ -46,7 +48,7 @@ export default function Passport() {
           {KINDS.map(([k, label, icon]) => (
             <button key={k} onClick={() => setKind(k)}
               className={`chip flex items-center gap-1 ${kind === k ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>
-              <Icon name={icon} size={13} /> {label}
+              <Icon name={icon} size={13} /> {tr(label)}
             </button>
           ))}
         </div>
@@ -54,7 +56,7 @@ export default function Passport() {
         <section className="card space-y-3 p-5">
           <h3 className="font-bold" style={{ color: 'var(--navy)' }}><T>Your record</T></h3>
           {FIELDS[kind].map(([key, label]) => (
-            <input key={key} className="field" placeholder={label}
+            <input key={key} className="field" placeholder={tr(label)}
               value={form[key] ?? ''}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
           ))}
@@ -65,7 +67,7 @@ export default function Passport() {
           <section className="card p-5">
             <h3 className="font-bold" style={{ color: 'var(--navy)' }}><T>Your rights</T></h3>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink">
-              {data.rights.map((r, i) => <li key={i}>{r}</li>)}
+              {data.rights.map((r, i) => <li key={i}>{tr(r)}</li>)}
             </ul>
           </section>
         )}
@@ -76,7 +78,7 @@ export default function Passport() {
           <section className="card p-5 text-center">
             <h3 className="font-bold" style={{ color: 'var(--navy)' }}><T>Trust score</T></h3>
             <div className={`mt-2 text-5xl font-extrabold ${BAND_COLOR[data.trust_band] || ''}`}>{data.trust_score}</div>
-            <div className={`text-sm font-medium capitalize ${BAND_COLOR[data.trust_band] || 'text-mute'}`}>{data.trust_band}</div>
+            <div className={`text-sm font-medium capitalize ${BAND_COLOR[data.trust_band] || 'text-mute'}`}>{tr(data.trust_band)}</div>
             <div className="mt-3 text-xs text-mute"><T>Record completeness</T>: {data.record_completeness}%</div>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
               <Mini label="Checks" value={data.stats.checks_run} />
@@ -87,7 +89,7 @@ export default function Passport() {
               <div className="mt-4 text-left">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-mute"><T>Risk factors</T></p>
                 {data.risk_factors.map((f, i) => (
-                  <div key={i} className="rounded bg-red-50 px-2 py-1 text-xs text-red-600">{f}</div>
+                  <div key={i} className="rounded bg-red-50 px-2 py-1 text-xs text-red-600">{tr(f)}</div>
                 ))}
               </div>
             )}

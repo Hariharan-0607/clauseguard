@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { estimateCompensation, estimateCost, estimateSettlement } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 
 const CLAIM_FIELDS = {
   wage_theft: [['monthly_wage', 'Monthly wage'], ['months_unpaid', 'Months unpaid']],
@@ -13,11 +14,12 @@ const CLAIM_FIELDS = {
 }
 
 function Result({ est }) {
+  const tr = useT()
   if (!est) return null
   return (
     <section className="card p-5">
       <div className="flex items-baseline justify-between">
-        <h3 className="font-bold capitalize" style={{ color: 'var(--navy)' }}>{est.kind} <T>estimate</T></h3>
+        <h3 className="font-bold capitalize" style={{ color: 'var(--navy)' }}>{tr(est.kind)} <T>estimate</T></h3>
         {est.probability > 0 && <span className="chip bg-teal/10 text-teal">{Math.round(est.probability * 100)}% <T>success</T></span>}
       </div>
       <div className="my-3 text-center">
@@ -29,7 +31,7 @@ function Result({ est }) {
       <div className="space-y-1">
         {est.breakdown.map((b, i) => (
           <div key={i} className="flex justify-between border-b py-1 text-sm" style={{ borderColor: 'var(--border)' }}>
-            <span className="text-ink">{b.label}<span className="ml-1 text-xs text-mute">{b.note}</span></span>
+            <span className="text-ink">{tr(b.label)}<span className="ml-1 text-xs text-mute">{tr(b.note)}</span></span>
             <span className="font-medium text-ink">{est.currency} {b.amount.toLocaleString()}</span>
           </div>
         ))}
@@ -41,6 +43,7 @@ function Result({ est }) {
 }
 
 export default function Estimate() {
+  const tr = useT()
   const [tab, setTab] = useState('compensation')
   const [claimType, setClaimType] = useState('wage_theft')
   const [inputs, setInputs] = useState({})
@@ -81,7 +84,7 @@ export default function Estimate() {
         <div className="flex gap-2">
           {['compensation', 'settlement', 'cost'].map((t) => (
             <button key={t} onClick={() => { setTab(t); setEst(null) }}
-              className={`chip capitalize ${tab === t ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>{t}</button>
+              className={`chip capitalize ${tab === t ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>{tr(t)}</button>
           ))}
         </div>
 
@@ -89,10 +92,10 @@ export default function Estimate() {
           <section className="card space-y-3 p-5">
             <select className="field" value={cost.forum} onChange={(e) => setCost({ ...cost, forum: e.target.value })}>
               {['consumer_forum', 'labour_court', 'civil_court', 'high_court', 'tribunal'].map((f) => (
-                <option key={f} value={f}>{f.replace('_', ' ')}</option>
+                <option key={f} value={f}>{tr(f.replace('_', ' '))}</option>
               ))}
             </select>
-            <input type="number" className="field" placeholder="Claim amount"
+            <input type="number" className="field" placeholder={tr('Claim amount')}
               value={cost.claim_amount} onChange={(e) => setCost({ ...cost, claim_amount: e.target.value })} />
             <label className="block text-sm text-mute"><T>Case complexity</T>: {Number(cost.complexity).toFixed(1)}x
               <input type="range" min="0.5" max="2" step="0.1" className="mt-1 w-full"
@@ -103,17 +106,17 @@ export default function Estimate() {
         ) : tab === 'compensation' ? (
           <section className="card space-y-3 p-5">
             <select className="field" value={claimType} onChange={(e) => { setClaimType(e.target.value); setInputs({}) }}>
-              {Object.keys(CLAIM_FIELDS).map((k) => <option key={k} value={k}>{k.replace('_', ' ')}</option>)}
+              {Object.keys(CLAIM_FIELDS).map((k) => <option key={k} value={k}>{tr(k.replace('_', ' '))}</option>)}
             </select>
             {CLAIM_FIELDS[claimType].map(([key, label]) => (
-              <input key={key} type="number" className="field" placeholder={label}
+              <input key={key} type="number" className="field" placeholder={tr(label)}
                 value={inputs[key] || ''} onChange={(e) => setInputs({ ...inputs, [key]: e.target.value })} />
             ))}
             <button onClick={runComp} className="btn-primary"><T>Estimate compensation</T></button>
           </section>
         ) : (
           <section className="card space-y-3 p-5">
-            <input type="number" className="field" placeholder="Claim amount"
+            <input type="number" className="field" placeholder={tr('Claim amount')}
               value={settle.claim_amount} onChange={(e) => setSettle({ ...settle, claim_amount: e.target.value })} />
             <label className="block text-sm text-mute"><T>Evidence strength</T>: {Math.round(settle.evidence_strength * 100)}%
               <input type="range" min="0" max="1" step="0.05" className="mt-1 w-full"

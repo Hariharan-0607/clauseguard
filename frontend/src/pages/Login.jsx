@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth.jsx'
 import { login, signup } from '../api/client.js'
 import { Spinner } from '../components/States.jsx'
+import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const DEMO_PASSWORD = 'demo1234'
@@ -19,6 +21,7 @@ const ROLE_COLOR = {
 }
 
 export default function Login() {
+  const tr = useT()
   const nav = useNavigate()
   const loc = useLocation()
   const { signIn } = useAuth()
@@ -57,19 +60,19 @@ export default function Login() {
 
       {/* Demo accounts — one per role, click to sign in instantly */}
       <div className="mb-4 rounded-xl border p-4" style={{ borderColor: 'var(--line)', background: 'var(--brand-50)' }}>
-        <p className="text-sm font-semibold" style={{ color: 'var(--navy)' }}>Try a demo role</p>
+        <p className="text-sm font-semibold" style={{ color: 'var(--navy)' }}><T>Try a demo role</T></p>
         <p className="mt-0.5 text-xs text-mute">
-          All use password <span className="font-mono font-semibold" style={{ color: 'var(--ink)' }}>{DEMO_PASSWORD}</span>. Click to sign in.
+          <T>All use password</T> <span className="font-mono font-semibold" style={{ color: 'var(--ink)' }}>{DEMO_PASSWORD}</span>. <T>Click to sign in.</T>
         </p>
         <div className="mt-3 space-y-2">
           {DEMO_ACCOUNTS.map((a) => (
             <button key={a.email} onClick={() => useDemo(a.email)} disabled={busy}
               className="flex w-full items-center gap-3 rounded-lg border bg-white/60 p-2.5 text-left transition hover:shadow-sm disabled:opacity-60"
               style={{ borderColor: 'var(--line)' }}>
-              <span className={`chip shrink-0 capitalize ${ROLE_COLOR[a.role]}`}>{a.role}</span>
+              <span className={`chip shrink-0 capitalize ${ROLE_COLOR[a.role]}`}>{tr(a.role)}</span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-mono text-xs font-semibold" style={{ color: 'var(--ink)' }}>{a.email}</span>
-                <span className="block truncate text-[11px] text-mute">{a.desc}</span>
+                <span className="block truncate text-[11px] text-mute">{tr(a.desc)}</span>
               </span>
               <Icon name="arrow" size={14} className="shrink-0 text-mute" />
             </button>

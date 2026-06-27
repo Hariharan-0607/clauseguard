@@ -4,6 +4,7 @@ import { reviewFinding, reviewQueue } from '../api/client.js'
 import { useAuth } from '../auth.jsx'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const SEV_COLOR = {
@@ -21,6 +22,7 @@ const CAN_REVIEW = ['reviewer', 'admin']
 
 export default function Review() {
   const { user } = useAuth()
+  const tr = useT()
   const [items, setItems] = useState([])
   const [pendingOnly, setPendingOnly] = useState(true)
   const [error, setError] = useState('')
@@ -49,7 +51,7 @@ export default function Review() {
         </div>
         <button onClick={() => setPendingOnly(!pendingOnly)}
           className={`chip ${pendingOnly ? 'bg-teal text-white' : 'bg-slate-100 text-mute'}`}>
-          {pendingOnly ? 'Pending only' : 'All findings'}
+          {pendingOnly ? tr('Pending only') : tr('All findings')}
         </button>
       </div>
       {error && <ErrorState message={error} />}
@@ -68,10 +70,10 @@ export default function Review() {
           <div key={it.finding_id} className={`card p-4 ${it.reviewed ? 'opacity-70' : ''}`}>
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <span className="font-semibold text-ink">{it.category_label}</span>
-                <span className="ml-2 text-xs text-mute">{it.detection_title} · {it.domain}</span>
+                <span className="font-semibold text-ink">{tr(it.category_label)}</span>
+                <span className="ml-2 text-xs text-mute">{it.detection_title} · {tr(it.domain)}</span>
               </div>
-              <span className={`chip ${SEV_COLOR[it.severity]}`}>{it.severity}</span>
+              <span className={`chip ${SEV_COLOR[it.severity]}`}>{tr(it.severity)}</span>
             </div>
             <p className="mt-1 text-sm text-ink">{it.explanation}</p>
             {it.evidence && <p className="mt-2 rounded-lg bg-slate-50 p-2 text-xs italic text-mute">“{it.evidence}”</p>}
@@ -79,14 +81,14 @@ export default function Review() {
 
             {it.reviewed ? (
               <div className="mt-3 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                <Icon name="check" size={14} className="inline" /> <T>Reviewed</T>: {it.review_verdict}
+                <Icon name="check" size={14} className="inline" /> <T>Reviewed</T>: {tr(it.review_verdict)}
               </div>
             ) : (
               <div className="mt-3 flex gap-2">
                 {VERDICTS.map(([v, label, bg]) => (
                   <button key={v} onClick={() => decide(it.finding_id, v)} disabled={busy === it.finding_id}
                     className={`rounded-lg px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 ${bg}`}>
-                    {label}
+                    {tr(label)}
                   </button>
                 ))}
               </div>

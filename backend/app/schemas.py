@@ -263,6 +263,22 @@ class ReviewRequest(BaseModel):
     verdict: str                       # confirmed | dismissed | adjusted
 
 
+class ReviewQueueItem(BaseModel):
+    """A finding awaiting review, enriched with its parent detection context."""
+    finding_id: int
+    detection_id: str
+    detection_title: str
+    domain: str
+    category_label: str
+    severity: str
+    probability: float
+    confidence: float
+    evidence: str
+    explanation: str
+    reviewed: bool
+    review_verdict: str
+
+
 class DomainInfo(BaseModel):
     domain: str
     label: str

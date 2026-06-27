@@ -24,29 +24,62 @@ import Estimate from './pages/Estimate.jsx'
 import Passport from './pages/Passport.jsx'
 import Agent from './pages/Agent.jsx'
 import Roles from './pages/Roles.jsx'
+import Queue from './pages/Queue.jsx'
+import Review from './pages/Review.jsx'
 import Login from './pages/Login.jsx'
 
 const UI_LANGS = [
   ['en', 'English'], ['hi', 'हिन्दी'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'], ['bn', 'বাংলা']
 ]
 
-const NAV_ITEMS = (tr, role) => [
-  ['/', 'home', tr('Home')],
-  ['/advisor', 'chat', tr('Advisor')],
-  ['/check', 'search', tr('Check')],
-  ['/detection', 'shield', tr('Detection')],
-  ['/cases', 'file', tr('Cases')],
-  ['/estimate', 'briefcase', tr('Estimate')],
-  ['/passport', 'shield', tr('Passport')],
-  ['/agent', 'chat', tr('Agent')],
-  ['/compare', 'compare', tr('Compare')],
-  ['/library', 'book', tr('Rights')],
-  ['/deadlines', 'clock', tr('Deadlines')],
-  ['/help', 'help', tr('Help')],
-  ['/history', 'file', tr('History')],
-  // admin-only
-  ...(role === 'admin' ? [['/roles', 'scale', tr('Roles')]] : [])
-]
+// Navigation is role-aware: each role gets a menu tailored to what it does.
+// 'user' keeps the full consumer experience; staff roles get focused worklists.
+const NAV_ITEMS = (tr, role) => {
+  const user = [
+    ['/', 'home', tr('Home')],
+    ['/advisor', 'chat', tr('Advisor')],
+    ['/check', 'search', tr('Check')],
+    ['/detection', 'shield', tr('Detection')],
+    ['/cases', 'file', tr('Cases')],
+    ['/estimate', 'briefcase', tr('Estimate')],
+    ['/passport', 'shield', tr('Passport')],
+    ['/agent', 'chat', tr('Agent')],
+    ['/compare', 'compare', tr('Compare')],
+    ['/library', 'book', tr('Rights')],
+    ['/deadlines', 'clock', tr('Deadlines')],
+    ['/help', 'help', tr('Help')],
+    ['/history', 'file', tr('History')],
+  ]
+  const caseworker = [
+    ['/queue', 'briefcase', tr('Queue')],
+    ['/cases', 'file', tr('Cases')],
+    ['/detection', 'shield', tr('Detection')],
+    ['/estimate', 'briefcase', tr('Estimate')],
+    ['/library', 'book', tr('Rights')],
+    ['/help', 'help', tr('Help')],
+  ]
+  const reviewer = [
+    ['/review', 'scale', tr('Review')],
+    ['/detection', 'shield', tr('Detection')],
+    ['/library', 'book', tr('Rights')],
+    ['/help', 'help', tr('Help')],
+  ]
+  if (role === 'caseworker') return caseworker
+  if (role === 'reviewer') return reviewer
+  if (role === 'admin') {
+    // admin sees everything plus the staff worklists and role management
+    return [
+      ...user,
+      ['/queue', 'briefcase', tr('Queue')],
+      ['/review', 'scale', tr('Review')],
+      ['/roles', 'scale', tr('Roles')],
+    ]
+  }
+  return user
+}
+
+// Where each role lands after sign-in (their primary workspace).
+const ROLE_HOME = { caseworker: '/queue', reviewer: '/review' }
 
 // Floating sidebar (desktop). Starts expanded with labels; the toggle collapses it
 // to a slim icon rail with an animated width transition. Detached from the edge (floats).
@@ -347,7 +380,7 @@ export default function App() {
           <div className="mx-auto max-w-4xl">
             <Routes>
               <Route path="/login" element={<Navigate to="/" replace />} />
-              <Route path="/" element={<Protected><Home /></Protected>} />
+              <Route path="/" element={<Protected><RoleHome /></Protected>} />
               <Route path="/advisor" element={<Protected><Advisor /></Protected>} />
               <Route path="/check" element={<Protected><Upload /></Protected>} />
               <Route path="/detection" element={<Protected><Detection /></Protected>} />
@@ -356,6 +389,8 @@ export default function App() {
               <Route path="/passport" element={<Protected><Passport /></Protected>} />
               <Route path="/agent" element={<Protected><Agent /></Protected>} />
               <Route path="/roles" element={<Protected><Roles /></Protected>} />
+              <Route path="/queue" element={<Protected><Queue /></Protected>} />
+              <Route path="/review" element={<Protected><Review /></Protected>} />
               <Route path="/compare" element={<Protected><Compare /></Protected>} />
               <Route path="/result/:id" element={<Protected><Result /></Protected>} />
               <Route path="/letter/:id" element={<Protected><Letter /></Protected>} />
@@ -378,4 +413,12 @@ export default function App() {
 function Gate() {
   const { pathname } = useLocation()
   return <Navigate to="/login" replace state={{ from: pathname }} />
+}
+
+// Root landing: staff roles go straight to their workspace; users see Home.
+function RoleHome() {
+  const { user } = useAuth()
+  const dest = ROLE_HOME[user?.role]
+  if (dest) return <Navigate to={dest} replace />
+  return <Home />
 }

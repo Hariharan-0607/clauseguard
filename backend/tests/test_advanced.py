@@ -112,6 +112,27 @@ def test_detection_run_finds_violations():
     assert f0["laws"] and f0["recommended_actions"]
 
 
+def test_review_queue_lists_pending_and_reviewer_gated():
+    # a plain user cannot see the review queue
+    h, _ = _signup()
+    assert client.get("/detection/review-queue", headers=h).status_code == 403
+
+    # generate findings, then the admin (has review perm) sees them in the queue
+    client.post("/detection/run", headers=h, json={
+        "domain": "human_rights", "text": HR_TEXT, "title": "Queue contract"})
+    ah = _admin_headers()
+    q = client.get("/detection/review-queue", headers=ah).json()
+    assert len(q) >= 1
+    item = q[0]
+    assert item["finding_id"] and item["detection_title"] and not item["reviewed"]
+
+    # after reviewing, it drops out of the pending queue
+    client.patch(f"/detection/findings/{item['finding_id']}/review", headers=ah,
+                 json={"verdict": "confirmed"})
+    pending_ids = {i["finding_id"] for i in client.get("/detection/review-queue", headers=ah).json()}
+    assert item["finding_id"] not in pending_ids
+
+
 def test_detection_review_requires_reviewer_role():
     h, _ = _signup()  # plain user
     det = client.post("/detection/run", headers=h, json={

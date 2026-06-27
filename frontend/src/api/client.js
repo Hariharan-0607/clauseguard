@@ -104,6 +104,7 @@ export const runDetection = (body) => fetch(`${BASE}/detection/run`, { method: '
 export const listDetections = (domain) => fetch(`${BASE}/detection/detections${domain ? `?domain=${domain}` : ''}`, { headers: authHeaders() }).then(handle)
 export const getDetection = (id) => fetch(`${BASE}/detection/detections/${id}`, { headers: authHeaders() }).then(handle)
 export const reviewFinding = (id, verdict) => fetch(`${BASE}/detection/findings/${id}/review`, { method: 'PATCH', headers: j(), body: JSON.stringify({ verdict }) }).then(handle)
+export const reviewQueue = (onlyPending = true) => fetch(`${BASE}/detection/review-queue?only_pending=${onlyPending}`, { headers: authHeaders() }).then(handle)
 export const detectionAnalytics = (domain, days = 90) => fetch(`${BASE}/detection/analytics/${domain}?days=${days}`, { headers: authHeaders() }).then(handle)
 
 // --- Case Management ---

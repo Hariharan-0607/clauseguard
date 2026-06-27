@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { addCaseEvent, caseAnalytics, createCase, getCase, listCases, updateCase } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
@@ -86,7 +87,8 @@ function CaseDetail({ id, onBack, onChange }) {
 
 export default function Cases() {
   const [rows, setRows] = useState([])
-  const [open, setOpen] = useState(null)
+  const [params, setParams] = useSearchParams()
+  const [open, setOpen] = useState(params.get('open'))
   const [form, setForm] = useState({ title: '', category: 'wages', priority: 'medium', summary: '' })
   const [error, setError] = useState('')
 
@@ -99,7 +101,7 @@ export default function Cases() {
     catch (e) { setError(e.message) }
   }
 
-  if (open) return <CaseDetail id={open} onBack={() => { setOpen(null); load() }} onChange={load} />
+  if (open) return <CaseDetail id={open} onBack={() => { setOpen(null); setParams({}); load() }} onChange={load} />
 
   return (
     <div className="grid gap-5 lg:grid-cols-3">

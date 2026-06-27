@@ -11,7 +11,7 @@ from app.core.roles import Permission
 from app.db import get_db
 from app.models import Detection, DetectionFinding, User
 from app.schemas import (DetectionOut, DetectionRequest, DetectionSummary,
-                         DomainInfo, FindingOut, ReviewRequest)
+                         DomainInfo, FindingOut, ReviewQueueItem, ReviewRequest)
 from app.services import analytics, taxonomy
 from app.services.auth import get_current_user
 from app.services.detection import DetectionService
@@ -76,6 +76,26 @@ def get_detection(detection_id: str, db: Session = Depends(get_db)):
     if not d:
         raise HTTPException(status_code=404, detail="Detection not found")
     return _detection_out(d)
+
+
+@router.get("/review-queue", response_model=list[ReviewQueueItem])
+def review_queue(only_pending: bool = True, db: Session = Depends(get_db),
+                 user: User = Depends(require_permission(Permission.DETECTION_REVIEW))):
+    """Findings awaiting (or already given) a human review — the reviewer's worklist."""
+    q = (db.query(DetectionFinding, Detection)
+         .join(Detection, DetectionFinding.detection_id == Detection.id))
+    if only_pending:
+        q = q.filter(DetectionFinding.reviewed.is_(False))
+    rows = q.order_by(Detection.created_at.desc()).limit(100).all()
+    return [
+        ReviewQueueItem(
+            finding_id=f.id, detection_id=d.id, detection_title=d.title, domain=d.domain,
+            category_label=f.category_label, severity=f.severity, probability=f.probability,
+            confidence=f.confidence, evidence=f.evidence or "", explanation=f.explanation or "",
+            reviewed=f.reviewed, review_verdict=f.review_verdict or "",
+        )
+        for f, d in rows
+    ]
 
 
 @router.patch("/findings/{finding_id}/review", response_model=FindingOut)

@@ -4,13 +4,14 @@ import { useAuth } from '../auth.jsx'
 import { addDeadline, deleteDeadline, listDeadlines, toggleDeadline } from '../api/client.js'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
-import { useUI } from '../ui.jsx'
+import { useT, useUI } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const KINDS = { rent: 'briefcase', notice: 'file', renewal: 'clock', payment: 'briefcase', other: 'flag' }
 
 export default function Deadlines() {
   const { user } = useAuth()
+  const tr = useT()
   const [rows, setRows] = useState([])
   const [form, setForm] = useState({ title: '', kind: 'notice', due_date: '', notes: '' })
   const [error, setError] = useState('')
@@ -46,12 +47,12 @@ export default function Deadlines() {
 
       <section className="card grid gap-3 p-5 sm:grid-cols-2">
         <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-          placeholder="e.g. Give 30-day rent notice" className="field sm:col-span-2" />
+          placeholder={tr('e.g. Give 30-day rent notice')} className="field sm:col-span-2" />
         <select value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })} className="field">
-          {Object.keys(KINDS).map((k) => <option key={k} value={k}>{k}</option>)}
+          {Object.keys(KINDS).map((k) => <option key={k} value={k}>{tr(k)}</option>)}
         </select>
         <input type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} className="field" />
-        <button onClick={add} className="btn-primary sm:col-span-2">+ Add deadline</button>
+        <button onClick={add} className="btn-primary sm:col-span-2">+ {tr('Add deadline')}</button>
       </section>
 
       <div className="space-y-2">

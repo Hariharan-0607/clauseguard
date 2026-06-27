@@ -3,7 +3,7 @@ import { compareContracts, extractFile } from '../api/client.js'
 import { LANGUAGES, aiLanguage } from '../i18n.js'
 import { ErrorState, Spinner } from '../components/States.jsx'
 import T from '../components/T.jsx'
-import { useUI } from '../ui.jsx'
+import { useT, useUI } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const RISK = {
@@ -13,6 +13,7 @@ const RISK = {
 }
 
 export default function Compare() {
+  const tr = useT()
   const [a, setA] = useState('')
   const [b, setB] = useState('')
   const [labelA, setLabelA] = useState('Offer A')
@@ -50,8 +51,8 @@ export default function Compare() {
       {error && <ErrorState message={error} />}
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <Pane label={labelA} setLabel={setLabelA} text={a} setText={setA} onError={setError} placeholder="Paste the first contract, or upload a file…" />
-        <Pane label={labelB} setLabel={setLabelB} text={b} setText={setB} onError={setError} placeholder="Paste the second contract, or upload a file…" />
+        <Pane label={labelA} setLabel={setLabelA} text={a} setText={setA} onError={setError} placeholder={tr('Paste the first contract, or upload a file…')} />
+        <Pane label={labelB} setLabel={setLabelB} text={b} setText={setB} onError={setError} placeholder={tr('Paste the second contract, or upload a file…')} />
       </div>
 
       <div className="flex flex-wrap items-center gap-3">

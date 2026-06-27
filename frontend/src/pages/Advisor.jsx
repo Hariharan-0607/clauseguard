@@ -6,7 +6,7 @@ import { LANGUAGES, aiLanguage } from '../i18n.js'
 import { startDictation, speechSupported } from '../voice.js'
 import { ErrorState, Spinner } from '../components/States.jsx'
 import T from '../components/T.jsx'
-import { useUI } from '../ui.jsx'
+import { useT, useUI } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 import PrintHeader from '../components/PrintHeader.jsx'
 
@@ -25,6 +25,7 @@ const URGENCY = {
 
 export default function Advisor() {
   const { lang } = useUI()
+  const tr = useT()
   useUI().version
   const [situation, setSituation] = useState('')
   const [jurisdiction, setJurisdiction] = useState('IN')
@@ -69,7 +70,7 @@ export default function Advisor() {
         <div className="p-5">
           <div className="relative">
             <textarea value={situation} onChange={(e) => setSituation(e.target.value)} rows={4}
-              placeholder="e.g. My landlord won’t return my deposit and says it’s non-refundable…"
+              placeholder={tr('e.g. My landlord won’t return my deposit and says it’s non-refundable…')}
               className="w-full resize-none rounded-xl border bg-transparent px-4 py-3 text-[15px] leading-relaxed outline-none"
               style={{ borderColor: 'var(--border)', color: 'var(--text)' }} />
             {speechSupported() && (

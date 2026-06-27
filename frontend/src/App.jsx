@@ -119,7 +119,7 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
 
       {/* footer controls */}
       <div className="space-y-1 border-t px-3 py-3" style={{ borderColor: 'var(--border)' }}>
-        <SidebarButton icon={dark ? 'sun' : 'moon'} label={`${dark ? 'Light' : 'Dark'} mode`} collapsed={collapsed} onClick={() => setDark(!dark)} />
+        <SidebarButton icon={dark ? 'sun' : 'moon'} label={dark ? tr('Light mode') : tr('Dark mode')} collapsed={collapsed} onClick={() => setDark(!dark)} />
 
         {/* language — globe icon + current language name; click to switch the whole UI */}
         <div className="relative">
@@ -151,9 +151,9 @@ function FloatingSidebar({ collapsed, onToggle, onSelect }) {
               </span>
               <span className="sb-label min-w-0 flex-1 text-left">
                 <span className="block truncate text-xs font-medium" style={{ color: 'var(--text)' }}>
-                  {user.name || 'Account'}
+                  {user.name || tr('Account')}
                   {user.role && user.role !== 'user' && (
-                    <span className="ml-1 rounded px-1 text-[9px] font-bold uppercase" style={{ background: 'var(--highlight)', color: 'var(--accent)' }}>{user.role}</span>
+                    <span className="ml-1 rounded px-1 text-[9px] font-bold uppercase" style={{ background: 'var(--highlight)', color: 'var(--accent)' }}>{tr(user.role)}</span>
                   )}
                 </span>
                 <span className="block truncate text-[11px]" style={{ color: 'var(--text-3)' }}>{user.email}</span>
@@ -289,7 +289,7 @@ function SidebarContent({ onNavigate }) {
         <button onClick={() => setDark(!dark)}
           className="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-xs font-medium"
           style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}>
-          <span>{dark ? 'Dark' : 'Light'} mode</span>
+          <span>{dark ? tr('Dark mode') : tr('Light mode')}</span>
           <span className="h-4 w-7 rounded-full p-0.5" style={{ background: dark ? 'var(--accent)' : 'var(--border)' }}>
             <span className="block h-3 w-3 rounded-full bg-white transition" style={{ transform: dark ? 'translateX(12px)' : 'none' }} />
           </span>

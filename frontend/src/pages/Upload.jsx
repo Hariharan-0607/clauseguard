@@ -6,11 +6,12 @@ import { SAMPLES } from '../samples.js'
 import { startDictation, speechSupported } from '../voice.js'
 import { ErrorState, Spinner } from '../components/States.jsx'
 import T from '../components/T.jsx'
-import { useUI } from '../ui.jsx'
+import { useT, useUI } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 export default function Upload() {
   const nav = useNavigate()
+  const tr = useT()
   const [tab, setTab] = useState('paste')          // 'paste' | 'upload'
   const [text, setText] = useState('')
   const [file, setFile] = useState(null)
@@ -104,7 +105,7 @@ export default function Upload() {
           {tab === 'paste' ? (
             <div className="flex min-h-[420px] flex-col">
               <textarea value={text} onChange={(e) => setText(e.target.value)}
-                placeholder="Paste your rental agreement, job offer, or any contract here…&#10;&#10;ClauseGuard reads it clause by clause."
+                placeholder={tr('Paste your rental agreement, job offer, or any contract here…\n\nClauseGuard reads it clause by clause.')}
                 className="flex-1 resize-none bg-transparent px-6 py-5 text-[15px] leading-relaxed outline-none"
                 style={{ color: 'var(--text)', minHeight: 380 }} />
               {/* status bar */}
@@ -163,7 +164,7 @@ export default function Upload() {
               </Field>
               <Field label={<><T>Other party</T> <span style={{ color: 'var(--text-3)' }}>· <T>optional</T></span></>} icon="user">
                 <input value={counterparty} onChange={(e) => setCounterparty(e.target.value)}
-                  placeholder="Landlord / employer name" className="field pl-9" />
+                  placeholder={tr('Landlord / employer name')} className="field pl-9" />
               </Field>
 
               <button onClick={submit} disabled={!canSubmit}

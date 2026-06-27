@@ -4,6 +4,7 @@ import { listUsers, setUserRole } from '../api/client.js'
 import { useAuth } from '../auth.jsx'
 import { ErrorState } from '../components/States.jsx'
 import T from '../components/T.jsx'
+import { useT } from '../ui.jsx'
 import Icon from '../components/Icon.jsx'
 
 const ROLES = ['user', 'caseworker', 'reviewer', 'admin']
@@ -23,6 +24,7 @@ const ROLE_DESC = {
 
 export default function Roles() {
   const { user } = useAuth()
+  const tr = useT()
   const [rows, setRows] = useState([])
   const [error, setError] = useState('')
 
@@ -49,7 +51,7 @@ export default function Roles() {
         <div className="grid gap-2 sm:grid-cols-2">
           {ROLES.map((r) => (
             <div key={r} className="flex items-center gap-2 rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)' }}>
-              <span className={`chip ${ROLE_COLOR[r]}`}>{r}</span>
+              <span className={`chip ${ROLE_COLOR[r]}`}>{tr(r)}</span>
               <span className="text-mute"><T>{ROLE_DESC[r]}</T></span>
             </div>
           ))}
@@ -67,12 +69,12 @@ export default function Roles() {
               <div className="truncate font-semibold text-ink">{u.name || u.email}</div>
               <div className="truncate text-xs text-mute">{u.email}</div>
             </div>
-            <span className={`chip ${ROLE_COLOR[u.role]}`}>{u.role}</span>
+            <span className={`chip ${ROLE_COLOR[u.role]}`}>{tr(u.role)}</span>
             <select value={u.role} onChange={(e) => change(u.id, e.target.value)}
               className="field !w-auto !py-1 text-sm"
               disabled={u.id === user.id}
-              title={u.id === user.id ? 'You cannot change your own role' : ''}>
-              {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+              title={u.id === user.id ? tr('You cannot change your own role') : ''}>
+              {ROLES.map((r) => <option key={r} value={r}>{tr(r)}</option>)}
             </select>
           </div>
         ))}

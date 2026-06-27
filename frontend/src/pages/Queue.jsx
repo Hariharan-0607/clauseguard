@@ -95,7 +95,7 @@ export default function Queue() {
             </button>
             <button onClick={() => advance(c)} disabled={['resolved', 'closed'].includes(c.status)}
               className="rounded-lg bg-teal px-2.5 py-1 text-xs font-medium text-white disabled:opacity-40"
-              title="Advance status">
+              title={tr('Advance status')}>
               <T>Advance</T> →
             </button>
           </div>

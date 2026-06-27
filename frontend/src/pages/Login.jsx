@@ -93,12 +93,12 @@ export default function Login() {
         <div className="mt-5 space-y-3">
           {mode === 'signup' && (
             <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Your name" className="field" />
+              placeholder={tr('Your name')} className="field" />
           )}
           <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
-            placeholder="Email" type="email" className="field" />
+            placeholder={tr('Email')} type="email" className="field" />
           <input value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
-            placeholder="Password (6+ characters)" type="password" className="field"
+            placeholder={tr('Password (6+ characters)')} type="password" className="field"
             onKeyDown={(e) => e.key === 'Enter' && submit()} />
           <button onClick={() => submit()} disabled={busy} className="btn-primary w-full py-2.5">
             {busy ? <><Spinner /> Please wait…</> : mode === 'signup' ? 'Create account' : 'Sign in'}

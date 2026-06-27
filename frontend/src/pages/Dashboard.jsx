@@ -19,7 +19,7 @@ function Bars({ data, colorFn }) {
     <div className="space-y-1.5">
       {entries.map(([k, v]) => (
         <div key={k} className="flex items-center gap-2 text-sm">
-          <span className={`w-28 shrink-0 truncate capitalize ${colorFn ? colorFn(k) : 'text-ink'}`}>{k.replace('_', ' ')}</span>
+          <span className={`w-28 shrink-0 truncate capitalize ${colorFn ? colorFn(k) : 'text-ink'}`}><T>{k.replace('_', ' ')}</T></span>
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
             <div className="h-full rounded-full" style={{ width: `${(v / max) * 100}%`, background: 'var(--accent)' }} />
           </div>

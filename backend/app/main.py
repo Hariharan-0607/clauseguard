@@ -17,28 +17,38 @@ import app.services.agent  # noqa: F401  (registers agent memory subscribers)
 
 Base.metadata.create_all(bind=engine)
 
-# --- Seed a ready-to-use demo account so judges can sign in instantly ---
-DEMO_EMAIL = "demo@clauseguard.app"
+# --- Seed ready-to-use demo accounts (one per RBAC role) so anyone can sign in
+#     instantly and see exactly what each role can do. All share one password. ---
 DEMO_PASSWORD = "demo1234"
 
+# (email, display name, role). The original demo@clauseguard.app stays as admin
+# for backward compatibility; the role-specific accounts are added alongside it.
+DEMO_ACCOUNTS = [
+    ("demo@clauseguard.app", "Demo Admin", "admin"),
+    ("user@clauseguard.app", "Demo User", "user"),
+    ("caseworker@clauseguard.app", "Demo Caseworker", "caseworker"),
+    ("reviewer@clauseguard.app", "Demo Reviewer", "reviewer"),
+    ("admin@clauseguard.app", "Demo Admin", "admin"),
+]
 
-def _seed_demo_user():
-    """Seed the demo account as an ADMIN so all RBAC roles are reachable in a demo."""
+
+def _seed_demo_users():
+    """Create each demo account if missing; self-heal the role if it drifted."""
     db = SessionLocal()
     try:
-        existing = db.query(User).filter(User.email == DEMO_EMAIL).first()
-        if not existing:
-            db.add(User(email=DEMO_EMAIL, name="Demo User", role="admin",
-                        password_hash=hash_password(DEMO_PASSWORD)))
-            db.commit()
-        elif existing.role != "admin":
-            existing.role = "admin"      # ensure the demo account can manage roles
-            db.commit()
+        for email, name, role in DEMO_ACCOUNTS:
+            existing = db.query(User).filter(User.email == email).first()
+            if not existing:
+                db.add(User(email=email, name=name, role=role,
+                            password_hash=hash_password(DEMO_PASSWORD)))
+            elif existing.role != role:
+                existing.role = role
+        db.commit()
     finally:
         db.close()
 
 
-_seed_demo_user()
+_seed_demo_users()
 
 app = FastAPI(
     title="ClauseGuard API",

@@ -5,7 +5,18 @@ import { login, signup } from '../api/client.js'
 import { Spinner } from '../components/States.jsx'
 import Icon from '../components/Icon.jsx'
 
-const DEMO = { email: 'demo@clauseguard.app', password: 'demo1234' }
+const DEMO_PASSWORD = 'demo1234'
+// One demo account per RBAC role — click any to sign in instantly.
+const DEMO_ACCOUNTS = [
+  { role: 'user', email: 'user@clauseguard.app', desc: 'Run checks, own cases, estimates, agent' },
+  { role: 'caseworker', email: 'caseworker@clauseguard.app', desc: 'Manage & assign any case' },
+  { role: 'reviewer', email: 'reviewer@clauseguard.app', desc: 'Override AI detection findings' },
+  { role: 'admin', email: 'admin@clauseguard.app', desc: 'Full access + manage roles' },
+]
+const ROLE_COLOR = {
+  user: 'bg-slate-100 text-mute', caseworker: 'bg-blue-50 text-blue-600',
+  reviewer: 'bg-amber-50 text-amber-600', admin: 'bg-teal/10 text-teal',
+}
 
 export default function Login() {
   const nav = useNavigate()
@@ -29,9 +40,10 @@ export default function Login() {
     } catch (e) { setError(e.message) } finally { setBusy(false) }
   }
 
-  function useDemo() {
-    setForm({ ...form, ...DEMO })
-    submit(DEMO)
+  function useDemo(email) {
+    const creds = { email, password: DEMO_PASSWORD }
+    setForm({ ...form, ...creds })
+    submit(creds)
   }
 
   return (
@@ -43,16 +55,26 @@ export default function Login() {
         <span className="text-xl font-bold tracking-tight" style={{ color: 'var(--navy)' }}>ClauseGuard</span>
       </div>
 
-      {/* Demo banner */}
+      {/* Demo accounts — one per role, click to sign in instantly */}
       <div className="mb-4 rounded-xl border p-4" style={{ borderColor: 'var(--line)', background: 'var(--brand-50)' }}>
-        <p className="text-sm font-semibold" style={{ color: 'var(--navy)' }}>Demo account</p>
-        <p className="mt-1 text-xs text-mute">
-          Email <span className="font-mono font-semibold" style={{ color: 'var(--ink)' }}>{DEMO.email}</span> ·
-          Password <span className="font-mono font-semibold" style={{ color: 'var(--ink)' }}>{DEMO.password}</span>
+        <p className="text-sm font-semibold" style={{ color: 'var(--navy)' }}>Try a demo role</p>
+        <p className="mt-0.5 text-xs text-mute">
+          All use password <span className="font-mono font-semibold" style={{ color: 'var(--ink)' }}>{DEMO_PASSWORD}</span>. Click to sign in.
         </p>
-        <button onClick={useDemo} disabled={busy} className="btn-primary mt-3 w-full py-2 text-sm">
-          {busy ? <><Spinner /> Signing in…</> : 'Log in as demo user'}
-        </button>
+        <div className="mt-3 space-y-2">
+          {DEMO_ACCOUNTS.map((a) => (
+            <button key={a.email} onClick={() => useDemo(a.email)} disabled={busy}
+              className="flex w-full items-center gap-3 rounded-lg border bg-white/60 p-2.5 text-left transition hover:shadow-sm disabled:opacity-60"
+              style={{ borderColor: 'var(--line)' }}>
+              <span className={`chip shrink-0 capitalize ${ROLE_COLOR[a.role]}`}>{a.role}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-mono text-xs font-semibold" style={{ color: 'var(--ink)' }}>{a.email}</span>
+                <span className="block truncate text-[11px] text-mute">{a.desc}</span>
+              </span>
+              <Icon name="arrow" size={14} className="shrink-0 text-mute" />
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="card p-6">
